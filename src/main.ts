@@ -1,22 +1,12 @@
-import { invoke } from "@tauri-apps/api/tauri";
+import * as func from './func';
 
-let greetInputEl: HTMLInputElement | null;
-let greetMsgEl: HTMLElement | null;
 
-async function greet() {
-  if (greetMsgEl && greetInputEl) {
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    greetMsgEl.textContent = await invoke("greet", {
-      name: greetInputEl.value,
-    });
-  }
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-  greetInputEl = document.querySelector("#greet-input");
-  greetMsgEl = document.querySelector("#greet-msg");
-  document.querySelector("#greet-form")?.addEventListener("submit", (e) => {
-    e.preventDefault();
-    greet();
-  });
-});
+(document.querySelector('#clickTest') as HTMLDivElement)?.addEventListener('click', async () => {
+    console.log('wassup')
+    const fdata = await func.getLocation('Melbourne')
+    const testing = fdata.results[0]
+    const sdata = await func.getWeather(testing.latitude, testing.longitude, testing)
+    const elem = document.getElementById('data') as HTMLDivElement;
+    const text = JSON.stringify(sdata)
+    elem.innerHTML = text
+})

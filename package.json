@@ -10,7 +10,9 @@
     "tauri": "tauri"
   },
   "dependencies": {
-    "@tauri-apps/api": "^1"
+    "@tauri-apps/api": "^1",
+    "axios": "^1.7.2",
+    "chartjs": "^0.3.24"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1",
