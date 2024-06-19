@@ -1,0 +1,151 @@
+* {
+    scrollbar-color: #6a8383 #343f3f;
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+}
+
+body {
+    /* overflow-y: hidden; */
+    /* overflow-x: hidden; */
+}
+
+/* search area */
+
+#searchQuery {
+    top: 5px;
+    position: absolute;
+    border-radius: 20px;
+    width: 35%;
+    background-color: #252525;
+    height: 45px;
+    padding-left: 5px;
+}
+
+#searchQuery #searchBar {
+    position: relative;
+    float: left;
+    width: calc(100% - 45px);
+    height: 35px;
+    border-color: #00000000;
+    background-color: #00000000;
+    color: #cacaca;
+    font-size: large;
+    top: 3px;
+}
+
+input
+
+/* select:focus, */
+/* textarea:focus, */
+/* button:focus */
+    {
+    outline: none;
+}
+
+#searchButton {
+    position: sticky;
+    width: 45px;
+    height: 45px;
+    float: right;
+    background-color: #00000000;
+    border-color: #00000000;
+    border-left-color: #f0f0f0;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    top: 0px;
+}
+
+#searchButton:hover {
+    background-color: #ffffff99;
+}
+
+#searchButton img {
+    width: 25px;
+    height: 25px;
+}
+
+/* search bar results */
+
+#searchSuggest {
+    max-width: 100%;
+    z-index: 6;
+    display: grid;
+    position: absolute;
+    grid-template-columns: minmax(100px, 100%);
+    max-height: 500px;
+    top: 50px;
+    overflow: auto;
+    background: #353535;
+    border-radius: 10px;
+    transition: ease-in-out 500ms;
+    overflow: auto;
+    position: absolute
+}
+
+.result {
+    color: #17ebeb;
+    border-radius: 5px;
+    padding: 3px;
+}
+
+
+.result:nth-of-type(odd) {
+    background: #35353544;
+}
+
+.result:nth-of-type(even) {
+    background: #14141444;
+}
+
+.result:hover {
+    color: #15ff00;
+    background: #4a5749;
+}
+
+/* content */
+
+#mainContent {
+    margin-top: 50px;
+}
+
+
+table {
+    padding: none;
+    border: none;
+    border-spacing: 0;
+}
+
+/* hourly data */
+
+#weeklyTable {
+    border-spacing: 0;
+}
+
+
+#contentWeek {
+    display: inline-block;
+}
+
+#tableLabel {
+    background-color: #15ff00;
+}
+
+#tableLabel td {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#tableLabel tr{
+    height: 21px;
+    max-height: 21px;
+}
+
+#tableData {
+    background-color: #17ebeb;
+}
+
+#tableData td {
+    text-align: center;
+    padding-left: 5px;
+    padding-right: 5px;
+}

@@ -6,12 +6,13 @@ export type geoLocale = {
     elevation: number,
     feature_code: string,
     country_code: string,
-    admin1_id: number,
-    admin3_id: number,
-    admin4_id: number,
+    admin1_id?: number,
+    admin2_id?: number,
+    admin3_id?: number,
+    admin4_id?: number,
     timezone: string,
-    population: number,
-    postcodes: string[],
+    population?: number,
+    postcodes?: string[],
     country_id: number,
     country: string,
     admin1?: string,
@@ -20,7 +21,7 @@ export type geoLocale = {
     admin4?: string,
 };
 
-export type geoResults = { results: geoLocale[]; };
+export type geoResults = { results: geoLocale[]; generationtime_ms: number, };
 
 
 export type weatherData = {
@@ -38,7 +39,17 @@ export type weatherData = {
         weathercode: number,
         is_day: number,
         time: string;
+        interval: number;
     };
+    current_weather_units?: {
+        temperature: string,
+        windspeed: string,
+        winddirection: string,
+        weathercode: string,
+        is_day: string,
+        time: string;
+        interval: string;
+    }
     hourly?: weatherDataTypesHourly,
     hourly_units?: weatherDataUnitsHourly,
     daily?: weatherDataTypesDaily,
@@ -48,7 +59,7 @@ export type weatherData = {
 };
 
 type weatherDataTypesHourly = {
-    time?: string[],
+    time: string[],
     temperature_2m?: number[],
     relativehumidity_2m?: number[],
     dewpoint_2m?: number[],
@@ -98,6 +109,7 @@ type weatherDataTypesHourly = {
 };
 
 type weatherDataTypesDaily = {
+    time: string[],
     temperature_2m_max?: number[],
     temperature_2m_min?: number[],
     apparent_temperature_max?: number[],
@@ -111,8 +123,8 @@ type weatherDataTypesDaily = {
     precipitation_probability_min?: number[],
     precipitation_probability_mean?: number[],
     weathercode?: number[],
-    sunrise?: number[],
-    sunset?: number[],
+    sunrise?: string[],
+    sunset?: string[],
     windspeed_10m_max?: number[],
     windgusts_10m_max?: number[],
     winddirection_10m_dominant?: number[],
@@ -173,6 +185,7 @@ type weatherDataUnitsHourly = {
 };
 
 type weatherDataUnitsDaily = {
+    time: string;
     temperature_2m_max?: string,
     temperature_2m_min?: string,
     apparent_temperature_max?: string,

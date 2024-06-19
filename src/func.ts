@@ -1,17 +1,15 @@
 import { fs } from '@tauri-apps/api';
 import axios from 'axios';
-import * as chartjs from 'chartjs';
+import * as chartjs from 'chart.js';
+import * as testData from './data';
 import * as types from './types';
 
-const test = false;
+const test = true;
 
 
 export async function getLocation(name: string) {
     if (test) {
-        const init = await fs.readTextFile(`./weatherlocationdata.json`);
-        return JSON.parse(init) as {
-            results: types.geoLocale[];
-        };
+        return testData.location;
     }
     const url = `https://geocoding-api.open-meteo.com/v1/search?name=${name.replaceAll(' ', '+')}&count=10&language=en&format=json`;
     const data = await axios.get(url)
@@ -22,7 +20,6 @@ export async function getLocation(name: string) {
         }
         );
 
-    // await fs.writeTextFile(`./weatherlocationdata.json`, JSON.stringify(data, null, 2));
     return data as { results: types.geoLocale[]; };
 }
 
@@ -32,8 +29,7 @@ export async function getWeather(
     location: types.geoLocale,
 ) {
     if (test) {
-        const init = await fs.readTextFile(`./weatherdata.json`);
-        return JSON.parse(init) as types.weatherData;
+        return testData.weather;
     } else {
         if (isNaN(latitude) || isNaN(longitude)) {
             return 'error - NaN values given';
@@ -49,7 +45,6 @@ export async function getWeather(
                 console.log(err);
                 return { error: true, reason: "timeout" };
             });
-        // await fs.writeTextFile(`./weatherdata.json`, JSON.stringify(data, null, 2));
         return data as types.weatherData;
     }
 }

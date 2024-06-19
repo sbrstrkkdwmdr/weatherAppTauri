@@ -7,12 +7,14 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "tb": "tauri build"
   },
   "dependencies": {
     "@tauri-apps/api": "^1",
     "axios": "^1.7.2",
-    "chartjs": "^0.3.24"
+    "chart.js": "^4.4.3",
+    "moment": "^2.30.1"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1",
