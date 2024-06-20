@@ -33,10 +33,11 @@ export function week(data: types.weatherData, main: HTMLElement) {
     windRow.className = 'rowWind';
     gustRow.className = 'rowGust';
 
+    const rn = moment();
     // cell bg darkness determined by time of day maybe
 
     const hourly = data.hourly!;
-    const hrSeperator = 4; // do every x hours. make sure its factors of 8
+    const hrSeperator = 4; // do every x hours. make sure its factors of 8 or 24
     for (let i = 0; i < (hourly.time.length); i += hrSeperator) {
         weatherRow.insertCell();
         tempRow.insertCell();
@@ -54,14 +55,26 @@ export function week(data: types.weatherData, main: HTMLElement) {
         // console.log(sunrise);
         // console.log(kyou);
         // console.log(sunset);
+
+
         if (kyou.isAfter(sunrise) && kyou.isBefore(sunset)) {
             timeRow.cells[pos].style.backgroundColor = '#999999';
         } else {
             timeRow.cells[pos].style.backgroundColor = '#000000';
             timeRow.cells[pos].style.color = '#FFFFFF';
         }
+        if (
+            (+rn.format("HH") <= +kyou.format("HH") + (hrSeperator - 1)) &&
+            (+rn.format("HH") > +kyou.format("HH")) &&
+            (+rn.format("DD") == +kyou.format("DD"))
+        ) {
+            weatherRow.cells[pos].style.backgroundColor = '#15ff00';
+            timeRow.cells[pos].style.backgroundColor = '#15ff00';
+            weatherRow.cells[pos].style.color = '#000000';
+            timeRow.cells[pos].style.color = '#000000';
+        }
 
-        if (i % 8 == 0) {
+        if (i % (hrSeperator) == 0) {
             timeRow.cells[pos].innerHTML = kyou.format("HH");
             if (i % 24 == 0) {
                 const daySep = 24 / hrSeperator;
@@ -97,7 +110,7 @@ export function week(data: types.weatherData, main: HTMLElement) {
     blendCells(gustRow);
 
     const labelTable = document.createElement('table');
-    labelTable.id = 'tableLabel'
+    labelTable.id = 'tableLabel';
     labelTable.insertRow().insertCell(0).innerHTML = ' ';
     labelTable.insertRow().insertCell(0).innerHTML = 'Time';
     labelTable.insertRow().insertCell(0).innerHTML = ' ';
