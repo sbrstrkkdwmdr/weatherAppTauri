@@ -15,14 +15,14 @@ export function daySummary(data: types.weatherData, main: HTMLElement, location:
 
     //stuff that isnt the table
     const nonTable = document.createElement('div');
-    
+
     const placeTitle = document.createElement('h2');
     placeTitle.innerHTML = 'Weather for ' + func.genSearchName(location);
     nonTable.appendChild(placeTitle);
     const coordParagraph = document.createElement('p');
     coordParagraph.innerHTML = func.formatCoords(location);
     nonTable.appendChild(coordParagraph);
-    
+
     const smolTxt = document.createElement('p');
     smolTxt.innerHTML = rn.format('[Last updated] YYYY-MM-DD, HH:mm:ss') + '</br>';
     smolTxt.className = 'smol';
@@ -90,10 +90,10 @@ Max <span id="spanMax">${temp.max}</span>°C`;
     rainTable.insertRow();
     for (let i = 0; i < 10; i++) {
         rainTable.rows[0].insertCell();
-        if (i <= Math.floor(rain.chance)) {
+        if (i <= Math.floor(rain.chance/10)) {
             rainTable.rows[0].cells[i].style.backgroundColor = '#00FF00';
         } else {
-            rainTable.rows[0].cells[i].style.backgroundColor = '#00000000';
+            rainTable.rows[0].cells[i].style.backgroundColor = '#3c3c3c';
         }
     }
     summaryTableRainPer.innerHTML = `Chance of rain: <span id="spanCur">${rain.chance}%</span>`;
@@ -162,20 +162,20 @@ Max gusts: <span id="spanMax">${wind.maxGust}</span>km/h
         weatherRow.cells[i].innerHTML = func.weatherCodeToString(weatherCode).icon;
 
         tempRow.cells[i].innerHTML = '' + hourly.temperature_2m![pos];
-        cellColour(tempRow.cells[i], hourly.temperature_2m![pos], 'temp', tempRow.cells[pos - 1]);
+        cellColour(tempRow.cells[i], hourly.temperature_2m![pos], 'temp');
 
         const precipitation = hourly.precipitation![pos] == 0 ? '' : hourly.precipitation![pos];
         const precipitationChance = hourly.precipitation_probability![pos] == 0 ? '' : hourly.precipitation_probability![pos];
         precipRow.cells[i].innerHTML = '' + precipitation;
         preChRow.cells[i].innerHTML = '' + precipitationChance;
-        cellColour(precipRow.cells[i], hourly.precipitation![pos], 'rain', precipRow.cells[pos - 1]);
-        cellColour(preChRow.cells[i], hourly.precipitation_probability![pos], 'rainchance', preChRow.cells[pos - 1]);
+        cellColour(precipRow.cells[i], hourly.precipitation![pos], 'rain');
+        cellColour(preChRow.cells[i], hourly.precipitation_probability![pos], 'rainchance');
 
         windRow.cells[i].innerHTML = '' + hourly.windspeed_10m![pos];
         gustRow.cells[i].innerHTML = '' + hourly.windgusts_10m![pos];
 
-        cellColour(windRow.cells[i], hourly.windspeed_10m![pos], 'wind', windRow.cells[i - 1]);
-        cellColour(gustRow.cells[i], hourly.windgusts_10m![pos], 'wind', gustRow.cells[i - 1]);
+        cellColour(windRow.cells[i], hourly.windspeed_10m![pos], 'wind');
+        cellColour(gustRow.cells[i], hourly.windgusts_10m![pos], 'wind');
 
         if (kyou.isAfter(sunrise) && kyou.isBefore(sunset)) {
             timeRow.cells[i].style.backgroundColor = '#999999';
@@ -192,6 +192,8 @@ Max gusts: <span id="spanMax">${wind.maxGust}</span>km/h
                 (+rn.format("DD") == +kyou.format("DD"))
             ) {
                 const bg = '#ff000044';
+                const curtimcl = 'currentTimeCell';
+
                 weatherRow.cells[i].style.backgroundColor = bg;
                 timeRow.cells[i].style.backgroundColor = bg;
                 tempRow.cells[i].style.backgroundColor = bg;
@@ -199,6 +201,16 @@ Max gusts: <span id="spanMax">${wind.maxGust}</span>km/h
                 preChRow.cells[i].style.backgroundColor = bg;
                 windRow.cells[i].style.backgroundColor = bg;
                 gustRow.cells[i].style.backgroundColor = bg;
+
+                timeRow.cells[i].className = curtimcl;
+                weatherRow.cells[i].className = curtimcl;
+                tempRow.cells[i].className = curtimcl;
+                precipRow.cells[i].className = curtimcl;
+                preChRow.cells[i].className = curtimcl;
+                windRow.cells[i].className = curtimcl;
+                gustRow.cells[i].className = curtimcl;
+
+                weatherRow.cells[i].scrollIntoView({ inline: "start" });
             }
         }, 100);
         pos++;
@@ -231,9 +243,11 @@ Max gusts: <span id="spanMax">${wind.maxGust}</span>km/h
 
     dailyTable.insertRow();
     dailyTable.rows[0].insertCell().appendChild(labelTable);
-    dailyTable.rows[0].insertCell().appendChild(table);
+    const dataContainer = document.createElement('div');
+    dataContainer.id = 'tableDiv';
+    dataContainer.appendChild(table);
+    dailyTable.rows[0].insertCell().appendChild(dataContainer);
     main.appendChild(dailyTable);
-
 }
 
 export function graph(data: types.weatherData, main: HTMLElement) {
@@ -285,21 +299,24 @@ export function week(data: types.weatherData, main: HTMLElement) {
         const weatherCode: number = data.hourly?.weathercode?.[i] ?? 0;
         weatherRow.cells[pos].innerHTML = func.weatherCodeToString(weatherCode).icon;
 
-        tempRow.cells[pos].innerHTML = '' + data.hourly!.temperature_2m![i];
-        cellColour(tempRow.cells[pos], data.hourly!.temperature_2m![i], 'temp', tempRow.cells[pos - 1]);
+        const curtemp = averageData(data.hourly!.temperature_2m!, i, hrSeperator);
+        tempRow.cells[pos].innerHTML = '' + averageData(data.hourly!.temperature_2m!, i, hrSeperator);
+        cellColour(tempRow.cells[pos], +curtemp, 'temp');
 
-        const precipitation = data.hourly!.precipitation![i] == 0 ? '' : data.hourly!.precipitation![i];
-        const precipitationChance = data.hourly!.precipitation_probability![i] == 0 ? '' : data.hourly!.precipitation_probability![i];
+        const precipitation = averageData(data.hourly!.precipitation!, i, hrSeperator) == '0.0' ? '' : averageData(data.hourly!.precipitation!, i, hrSeperator);
+        const precipitationChance = averageData(data.hourly!.precipitation_probability!, i, hrSeperator) == '0.0' ? '' : averageData(data.hourly!.precipitation_probability!, i, hrSeperator);
         precipRow.cells[pos].innerHTML = '' + precipitation;
         preChRow.cells[pos].innerHTML = '' + precipitationChance;
-        cellColour(precipRow.cells[pos], data.hourly!.precipitation![i], 'rain', precipRow.cells[pos - 1]);
-        cellColour(preChRow.cells[pos], data.hourly!.precipitation_probability![i], 'rainchance', preChRow.cells[pos - 1]);
+        cellColour(precipRow.cells[pos], +precipitation, 'rain');
+        cellColour(preChRow.cells[pos], +precipitationChance, 'rainchance');
 
-        windRow.cells[pos].innerHTML = '' + data.hourly!.windspeed_10m![i];
-        gustRow.cells[pos].innerHTML = '' + data.hourly!.windgusts_10m![i];
+        const wind = averageData(data.hourly!.windspeed_10m!, i, hrSeperator);
+        const gust = averageData(data.hourly!.windgusts_10m!, i, hrSeperator);
+        windRow.cells[pos].innerHTML = '' + wind;
+        gustRow.cells[pos].innerHTML = '' + gust;
 
-        cellColour(windRow.cells[pos], data.hourly!.windspeed_10m![i], 'wind', windRow.cells[pos - 1]);
-        cellColour(gustRow.cells[pos], data.hourly!.windgusts_10m![i], 'wind', gustRow.cells[pos - 1]);
+        cellColour(windRow.cells[pos], +wind, 'wind');
+        cellColour(gustRow.cells[pos], +gust, 'wind');
 
         if (kyou.isAfter(sunrise) && kyou.isBefore(sunset)) {
             timeRow.cells[pos].style.backgroundColor = '#999999';
@@ -319,18 +336,29 @@ export function week(data: types.weatherData, main: HTMLElement) {
 
         setTimeout(async () => {
             if (
-                (+rn.format("HH") <= +kyou.format("HH") + (hrSeperator - 1)) &&
-                (+rn.format("HH") >= +kyou.format("HH")) &&
+                (+rn.format("HH") < +kyou.format("HH") + (hrSeperator / 2)) &&
+                (+rn.format("HH") >= +kyou.format("HH") - (hrSeperator / 2)) &&
                 (+rn.format("DD") == +kyou.format("DD"))
             ) {
                 const bg = '#ff000044';
-                weatherRow.cells[pos].style.backgroundColor = bg;
+                const curtimcl = 'currentTimeCell';
                 timeRow.cells[pos].style.backgroundColor = bg;
+                weatherRow.cells[pos].style.backgroundColor = bg;
                 tempRow.cells[pos].style.backgroundColor = bg;
                 precipRow.cells[pos].style.backgroundColor = bg;
                 preChRow.cells[pos].style.backgroundColor = bg;
                 windRow.cells[pos].style.backgroundColor = bg;
                 gustRow.cells[pos].style.backgroundColor = bg;
+
+                timeRow.cells[pos].className = curtimcl;
+                weatherRow.cells[pos].className = curtimcl;
+                tempRow.cells[pos].className = curtimcl;
+                precipRow.cells[pos].className = curtimcl;
+                preChRow.cells[pos].className = curtimcl;
+                windRow.cells[pos].className = curtimcl;
+                gustRow.cells[pos].className = curtimcl;
+
+                weatherRow.cells[pos].scrollIntoView({ inline: "start" });
             }
         }, 100);
     }
@@ -364,14 +392,17 @@ export function week(data: types.weatherData, main: HTMLElement) {
 
     weeklyTable.insertRow();
     weeklyTable.rows[0].insertCell().appendChild(labelTable);
-    weeklyTable.rows[0].insertCell().appendChild(table);
+    const dataContainer = document.createElement('div'); //for scrolling
+    dataContainer.id = 'tableDiv';
+    dataContainer.appendChild(table);
+    weeklyTable.rows[0].insertCell().appendChild(dataContainer);
     main.appendChild(weeklyTable);
 }
 
 /**
  * calculate cell colour based off of the number given
  */
-function cellColour(cell: HTMLTableCellElement, value: number, type: 'wind' | 'temp' | 'rain' | 'rainchance', prev?: HTMLTableCellElement) {
+function cellColour(cell: HTMLTableCellElement, value: number, type: 'wind' | 'temp' | 'rain' | 'rainchance',) {
     let main = '#FFFFFF';
     switch (type) {
         case 'wind': {
@@ -502,4 +533,35 @@ function blendCells(row: HTMLTableRowElement, start?: number, end?: number) {
         }
     }
     row.style.backgroundImage = `linear-gradient(to right, ${grads.join(', ')})`;
+}
+
+/**
+ * gets mean number 
+ */
+function averageData(data: number[], position: number, range: number) {
+    if (range % 2 == 0) {
+        let distance = range / 2;
+        const init: number[][] = [];
+        for (let i = -distance; i < distance; i++) {
+            const tempArr: number[] = [];
+            if (data[position + i]) {
+                tempArr.push(data[position + i]);
+            }
+            if (data[position + i + 1]) {
+                tempArr.push(data[position + i + 1]);
+            }
+            if (tempArr.length !== 0) {
+                init.push(tempArr);
+            }
+        }
+        const arr = init.map(x => x.reduce((a, b) => b + a, 0) / 2);
+        return (arr.reduce((a, b) => b + a, 0) / range).toFixed(1);
+    } else {
+        let distance = (range - 1) / 2;
+        const arr: number[] = [];
+        for (let i = -distance; i <= distance; i++) {
+            arr.push(data[position + i]);
+        }
+        return (arr.reduce((a, b) => b + a, 0) / range).toFixed(1);
+    }
 }

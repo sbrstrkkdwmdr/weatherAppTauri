@@ -125,14 +125,14 @@ h2, p {
 }
 
 #summaryTable {
-    border: 1px solid black;
+    /* border: 1px solid black; */
     border-spacing: 1px;
 }
 
 #summaryTable td {
     width: fit-content;
     white-space: pre;
-    border: 1px solid black;
+    border: 1px dotted black;
     vertical-align: top;
 }
 
@@ -143,12 +143,11 @@ h2, p {
 
 #rainPercent td {
     width: 5px;
+    border: 1px solid black;
 }
 
-#rainPercent {
-    border: 1px solid white;
-    border-spacing: 1px;
-}
+/* #rainPercent {
+} */
 
 #spanMax {
     color: #f16969;
@@ -177,6 +176,20 @@ h2, p {
 
 #weeklyTable {
     border-spacing: 0;
+    width: 500px;
+}
+
+#weeklyTable td {
+    vertical-align: top;
+}
+
+#dailyTable {
+    border-spacing: 0;
+    width: 500px;
+}
+
+#dailyTable td {
+    vertical-align: top;
 }
 
 
@@ -185,13 +198,19 @@ h2, p {
 }
 
 #tableLabel {
-    background-color: #15ff00;
+    background-color: #b4b4b4;
     color: black;
+    table-layout: fixed;
 }
 
 #tableLabel td {
     white-space: nowrap;
     overflow: hidden;
+    text-align: right;
+}
+
+#tableLabel td:first-child{
+    color: grey;
 }
 
 #tableLabel tr {
@@ -208,4 +227,9 @@ h2, p {
     text-align: center;
     padding-left: 5px;
     padding-right: 5px;
+}
+
+#tableDiv {
+    width: 400px;
+    overflow: scroll;
 }

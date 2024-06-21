@@ -6,7 +6,6 @@ import * as types from './types';
 
 const test = true;
 
-
 export async function getLocation(name: string) {
     if (test) {
         return testData.location;
@@ -19,7 +18,7 @@ export async function getLocation(name: string) {
             return { error: true };
         }
         );
-
+    console.log(data);
     return data as { results: types.geoLocale[]; };
 }
 
@@ -45,6 +44,7 @@ export async function getWeather(
                 console.log(err);
                 return { error: true, reason: "timeout" };
             });
+        console.log(data);
         return data as types.weatherData;
     }
 }
