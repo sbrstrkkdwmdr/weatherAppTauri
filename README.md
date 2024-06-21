@@ -10,3 +10,5 @@ a simple weather app developed using Vite and Tauri
 [![license](https://img.shields.io/github/license/sbrstrkkdwmdr/interactivemap?label=license)](https://github.com/sbrstrkkdwmdr/weatherAppTauri/blob/main/LICENSE)
 [![lastcommit](https://img.shields.io/github/last-commit/sbrstrkkdwmdr/interactivemap)](https://github.com/sbrstrkkdwmdr/weatherAppTauri)
 [![changelog](https://img.shields.io/badge/Changelog-AAAAAA)](https://github.com/sbrstrkkdwmdr/weatherAppTauri/blob/main/changelog.md)</br>
+
+im not a graphic designer so it might look a lil ugly (😭)
