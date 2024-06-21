@@ -1,7 +1,12 @@
-# Tauri + Vanilla TS
+# weatherAppTauri
 
-This template should help get you started developing with Tauri in vanilla HTML, CSS and Typescript.
+a simple weather app developed using Vite and Tauri
 
-## Recommended IDE Setup
+[![typescript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://github.com/microsoft/TypeScript)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tauri](https://img.shields.io/badge/Tauri-24C8D8?style=for-the-badge&logo=tauri&logoColor=white)](https://tauri.app/)
+</br>
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+[![license](https://img.shields.io/github/license/sbrstrkkdwmdr/interactivemap?label=license)](https://github.com/sbrstrkkdwmdr/weatherAppTauri/blob/main/LICENSE)
+[![lastcommit](https://img.shields.io/github/last-commit/sbrstrkkdwmdr/interactivemap)](https://github.com/sbrstrkkdwmdr/weatherAppTauri)
+[![changelog](https://img.shields.io/badge/Changelog-AAAAAA)](https://github.com/sbrstrkkdwmdr/weatherAppTauri/blob/main/changelog.md)</br>
