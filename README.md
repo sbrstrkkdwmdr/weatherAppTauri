@@ -12,3 +12,23 @@ a simple weather app developed using Vite and Tauri
 [![changelog](https://img.shields.io/badge/Changelog-AAAAAA)](https://github.com/sbrstrkkdwmdr/weatherAppTauri/blob/main/changelog.md)</br>
 
 im not a graphic designer so it might look a lil ugly (😭)
+
+## Running the app
+
+### Release
+
+Download the latest release from [the releases page](https://github.com/sbrstrkkdwmdr/weatherAppTauri/releases)</br>
+Run the `.exe` file</br>
+There may be a Microsoft Defender warning pop-up
+
+### From source
+
+Run `npm i` to install all dependencies </br>
+Run `npm run dev`</br>
+*There may be inconsistencies between running it this way compared to the app itself*
+
+### Building/compiling
+
+Run `npm run tb` </br>
+
+The `.exe` should be in `./src-tauri/target/release/<appname>.exe`
