@@ -198,8 +198,8 @@ h2, p {
 }
 
 #tableLabel {
-    background-color: #b4b4b4;
-    color: black;
+    background-color: #1f1f1f;
+    color: #747474;
     table-layout: fixed;
 }
 
@@ -210,7 +210,7 @@ h2, p {
 }
 
 #tableLabel td:first-child{
-    color: grey;
+    color: #ffffff;
 }
 
 #tableLabel tr {
@@ -219,8 +219,12 @@ h2, p {
 }
 
 #tableData {
-    background-color: #17ebeb;
-    color: black;
+    background-color: #1f1f1f;
+    color: #000000;
+}
+
+.weatherRow, .dayRow {
+    color: #cfcfcf;
 }
 
 #tableData td {
