@@ -90,7 +90,7 @@ Max <span id="spanMax">${temp.max}</span>°C`;
     rainTable.insertRow();
     for (let i = 0; i < 10; i++) {
         rainTable.rows[0].insertCell();
-        if (i <= Math.floor(rain.chance/10)) {
+        if (i <= Math.floor(rain.chance / 10)) {
             rainTable.rows[0].cells[i].style.backgroundColor = '#00FF00';
         } else {
             rainTable.rows[0].cells[i].style.backgroundColor = '#3c3c3c';
@@ -129,13 +129,13 @@ Max gusts: <span id="spanMax">${wind.maxGust}</span>km/h
     const windRow = table.insertRow(); // km/h
     const gustRow = table.insertRow(); // km/h
 
-    timeRow.className = 'rowTime';
-    weatherRow.className = 'rowWeather';
-    tempRow.className = 'rowTemp';
-    precipRow.className = 'rowPrecip';
-    preChRow.className = 'rowPreCh';
-    windRow.className = 'rowWind';
-    gustRow.className = 'rowGust';
+    timeRow.className = 'timeRow';
+    weatherRow.className = 'weatherRow';
+    tempRow.className = 'tempRow';
+    precipRow.className = 'precipRow';
+    preChRow.className = 'preChRow';
+    windRow.className = 'windRow';
+    gustRow.className = 'gustRow';
 
     if (pos > 7) {
         pos -= 7;
@@ -268,14 +268,14 @@ export function week(data: types.weatherData, main: HTMLElement) {
     const windRow = table.insertRow(); // km/h
     const gustRow = table.insertRow(); // km/h
 
-    dayRow.className = 'rowDay';
-    timeRow.className = 'rowTime';
-    weatherRow.className = 'rowWeather';
-    tempRow.className = 'rowTemp';
-    precipRow.className = 'rowPrecip';
-    preChRow.className = 'rowPreCh';
-    windRow.className = 'rowWind';
-    gustRow.className = 'rowGust';
+    dayRow.className = 'dayRow';
+    timeRow.className = 'timeRow';
+    weatherRow.className = 'weatherRow';
+    tempRow.className = 'tempRow';
+    precipRow.className = 'precipRow';
+    preChRow.className = 'preChRow';
+    windRow.className = 'windRow';
+    gustRow.className = 'gustRow';
 
     const rn = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60));
     // cell bg darkness determined by time of day maybe
@@ -336,9 +336,13 @@ export function week(data: types.weatherData, main: HTMLElement) {
 
         setTimeout(async () => {
             if (
-                (+rn.format("HH") < +kyou.format("HH") + (hrSeperator / 2)) &&
-                (+rn.format("HH") >= +kyou.format("HH") - (hrSeperator / 2)) &&
-                (+rn.format("DD") == +kyou.format("DD"))
+                ((+rn.format("HH") < +kyou.format("HH") + (hrSeperator / 2)) &&
+                    (+rn.format("HH") >= +kyou.format("HH") - (hrSeperator / 2)) &&
+                    (+rn.format("DD") == +kyou.format("DD"))) ||
+                ((+kyou.format("HH") == 0) &&
+                    (+rn.format("HH") < 24 + (hrSeperator / 2)) &&
+                    (+rn.format("HH") >= 24 - (hrSeperator / 2)) &&
+                    (+rn.format("DD") + 1 == +kyou.format("DD")))
             ) {
                 const bg = '#ff000044';
                 const curtimcl = 'currentTimeCell';
