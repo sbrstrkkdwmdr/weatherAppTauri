@@ -1,3 +1,4 @@
+import moment from 'moment';
 import * as func from './func';
 import * as generate from './generator';
 import * as types from './types';
@@ -23,32 +24,17 @@ async function generateResults() {
     searchResults.innerHTML = '';
     for (const location of locationData.results) {
         const elem = document.createElement('div');
-        elem.innerHTML = genSearchName(location);
+        elem.innerHTML = func.genSearchName(location);
         elem.className = 'result';
         elem.addEventListener('click', async () => {
             console.log(location.name, location.id);
             let data = await func.getWeather(location.latitude, location.longitude, location);
-            display(data);
+            display(data, location);
         });
         searchResults.appendChild(elem);
     }
 };
 
-/**
- * format name for search results
- */
-function genSearchName(data: types.geoLocale): string {
-    let base = `${data.name}, ${data.country}`;
-    if (data?.admin1 || data?.admin2 || data?.admin3 || data?.admin4) {
-        const extras = [];
-        data?.admin4 ? extras.push(data.admin4) : '';
-        data?.admin3 ? extras.push(data.admin3) : '';
-        data?.admin2 ? extras.push(data.admin2) : '';
-        data?.admin1 ? extras.push(data.admin1) : '';
-        base += ' (' + extras.join(', ') + ')';
-    }
-    return base;
-}
 
 // only show search results when focused on the search tab
 const searchSuggest = document.getElementById("searchSuggest") as HTMLElement;
@@ -65,10 +51,18 @@ for (let child of searchChildren) {
     });
 }
 
-async function display(data: types.weatherData | string) {
+// updating clock
+setInterval(() => {
+    const title = document.getElementById('title') as HTMLHeadingElement;
+    const rn = moment();
+    title.innerHTML = rn.format('[It is currently] dddd, YYYY-MM-DD, HH:mm:ss');
+}, 500);
+
+async function display(data: types.weatherData | string, location:types.geoLocale) {
     if (typeof data == 'string') {
         (document.getElementById('title') as HTMLHeadingElement).innerHTML = 'There was an error trying find the weather at location NaN,NaN';
     } else {
+        generate.daySummary(data, document.getElementById('contentDay') as HTMLDivElement, location);
         generate.week(data, document.getElementById('contentWeek') as HTMLDivElement);
     }
 }

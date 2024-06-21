@@ -5,6 +5,8 @@
 }
 
 body {
+    background-color: #343f3f;
+    color: white;
     /* overflow-y: hidden; */
     /* overflow-x: hidden; */
 }
@@ -115,6 +117,59 @@ table {
     border-spacing: 0;
 }
 
+.smol {
+    font-size: xx-small;
+}
+
+#summaryTable {
+    border: 1px solid black;
+    border-spacing: 1px;
+}
+
+#summaryTable td {
+    width: fit-content;
+    white-space: pre;
+    border: 1px solid black;
+    vertical-align: top;
+}
+
+#rainPercent tr {
+    height: 21px;
+    max-height: 21px;
+}
+
+#rainPercent td {
+    width: 5px;
+}
+
+#rainPercent {
+    border: 1px solid white;
+    border-spacing: 1px;
+}
+
+#spanMax {
+    color: #f16969;
+}
+
+#spanMin {
+    color: #69b0f1;
+}
+
+#spanCur {
+    color: #76e060;
+}
+
+#spanRain {
+    color: #69b0f1;
+}
+
+#spanSnow {
+    color: #b6cef1;
+
+}
+
+
+
 /* hourly data */
 
 #weeklyTable {
@@ -128,6 +183,7 @@ table {
 
 #tableLabel {
     background-color: #15ff00;
+    color: black;
 }
 
 #tableLabel td {
@@ -135,13 +191,14 @@ table {
     overflow: hidden;
 }
 
-#tableLabel tr{
+#tableLabel tr {
     height: 21px;
     max-height: 21px;
 }
 
 #tableData {
     background-color: #17ebeb;
+    color: black;
 }
 
 #tableData td {
