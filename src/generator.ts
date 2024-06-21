@@ -5,7 +5,7 @@ import * as types from './types';
 
 export function daySummary(data: types.weatherData, main: HTMLElement, location: types.geoLocale) {
     main.innerHTML = '';
-    const rn = moment();
+    const rn = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60));
     const today = data.current_weather!;
     const daily = data.daily!;
     const hourly = data.hourly!;
@@ -15,18 +15,19 @@ export function daySummary(data: types.weatherData, main: HTMLElement, location:
 
     //stuff that isnt the table
     const nonTable = document.createElement('div');
-    const smolTxt = document.createElement('p');
-    smolTxt.innerHTML = rn.format('[Last updated] YYYY-MM-DD, HH:mm:ss');
-    smolTxt.className = 'smol';
-    nonTable.appendChild(smolTxt);
-
+    
     const placeTitle = document.createElement('h2');
     placeTitle.innerHTML = 'Weather for ' + func.genSearchName(location);
     nonTable.appendChild(placeTitle);
-
     const coordParagraph = document.createElement('p');
     coordParagraph.innerHTML = func.formatCoords(location);
     nonTable.appendChild(coordParagraph);
+    
+    const smolTxt = document.createElement('p');
+    smolTxt.innerHTML = rn.format('[Last updated] YYYY-MM-DD, HH:mm:ss') + '</br>';
+    smolTxt.className = 'smol';
+    nonTable.appendChild(smolTxt);
+
 
     const localTime = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60))
         .format("ddd, DD MMM YYYY HH:mm:ss Z");
@@ -57,8 +58,9 @@ export function daySummary(data: types.weatherData, main: HTMLElement, location:
 
     const curweather = func.weatherCodeToString(today.weathercode ?? 0);
     summaryTableInfo.innerHTML =
-        `Local time is ${today.is_day == 0 ? '🌒' : '☀'}${localTime}
-${curweather.icon} ${curweather.string}</br>
+        `Local time is ${localTime}
+It is currently ${today.is_day == 0 ? 'night' : 'day'}.
+${curweather.icon} ${curweather.string}.
 `;
 
     const temp = {
@@ -261,7 +263,7 @@ export function week(data: types.weatherData, main: HTMLElement) {
     windRow.className = 'rowWind';
     gustRow.className = 'rowGust';
 
-    const rn = moment();
+    const rn = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60));
     // cell bg darkness determined by time of day maybe
 
     const hourly = data.hourly!;

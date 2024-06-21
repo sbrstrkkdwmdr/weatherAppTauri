@@ -110,11 +110,14 @@ input
     margin-top: 50px;
 }
 
-
 table {
     padding: none;
     border: none;
     border-spacing: 0;
+}
+
+h2, p {
+    margin: 2px;
 }
 
 .smol {
