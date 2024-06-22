@@ -116,7 +116,7 @@ table {
     border-spacing: 0;
 }
 
-h2, p {
+#contentHeading h2, #contentHeading p {
     margin: 2px;
 }
 

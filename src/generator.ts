@@ -16,12 +16,24 @@ export function daySummary(data: types.weatherData, main: HTMLElement, location:
     //stuff that isnt the table
     const nonTable = document.createElement('div');
 
+    const fullName = func.genTitleName(location);
+    const fullTitleDiv = document.createElement('div');
+    fullTitleDiv.id = 'contentHeading';
     const placeTitle = document.createElement('h2');
-    placeTitle.innerHTML = 'Weather for ' + func.genSearchName(location);
-    nonTable.appendChild(placeTitle);
+    placeTitle.innerHTML = 'Weather for ' + fullName[0];
+    fullTitleDiv.appendChild(placeTitle);
+
+    const subTitle = document.createElement('p');
+    subTitle.innerHTML = fullName[1] ?? '';
+    fullTitleDiv.appendChild(subTitle);
+
+    console.log(fullName);
+
     const coordParagraph = document.createElement('p');
     coordParagraph.innerHTML = func.formatCoords(location);
-    nonTable.appendChild(coordParagraph);
+    fullTitleDiv.appendChild(coordParagraph);
+
+    nonTable.appendChild(fullTitleDiv);
 
     const smolTxt = document.createElement('p');
     smolTxt.innerHTML = rn.format('[Last updated] YYYY-MM-DD, HH:mm:ss') + '</br>';

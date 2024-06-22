@@ -19,20 +19,33 @@ document.getElementById('searchBar')!.addEventListener('keyup', async (e) => {
 
 async function generateResults() {
     const searchBar = document.getElementById('searchBar') as HTMLInputElement;
-    const locationData = await func.getLocation(searchBar.value);
     const searchResults = document.getElementById('searchSuggest') as HTMLDivElement;
-    searchResults.innerHTML = '';
-    for (const location of locationData.results) {
-        console.log('generating results');
-        const elem = document.createElement('div');
-        elem.innerHTML = func.genSearchName(location);
-        elem.className = 'result';
-        elem.addEventListener('click', async () => {
-            console.log(location.name, location.id);
-            let data = await func.getWeather(location.latitude, location.longitude, location);
-            display(data, location);
-        });
-        searchResults.appendChild(elem);
+    const errmsg = document.getElementById('errmsg') as HTMLDivElement;
+    errmsg.innerHTML = 'Loading results...';
+    const locationData = await func.getLocation(encodeURIComponent(searchBar.value));
+    if (locationData?.results?.length > 0) {
+        errmsg.innerHTML = '';
+        searchResults.innerHTML = '';
+        for (const location of locationData.results) {
+            console.log('generating results');
+            const elem = document.createElement('div');
+            elem.innerHTML = func.genSearchName(location);
+            elem.className = 'result';
+            elem.addEventListener('click', async () => {
+                console.log('Getting weather for: ' + location.name + ' ' + location.id);
+                errmsg.innerHTML = 'Loading data...';
+                let data = await func.getWeather(location.latitude, location.longitude, location);
+                if (typeof data == 'string') {
+                    errmsg.innerHTML = 'Failed to load weather data for ' + location.name + ' ' + location.id;
+                } else {
+                    display(data, location);
+                    errmsg.innerHTML = '';
+                }
+            });
+            searchResults.appendChild(elem);
+        }
+    } else {
+        errmsg.innerHTML = `No results found for "${searchBar.value}"`;
     }
 };
 

@@ -243,6 +243,22 @@ export function genSearchName(data: types.geoLocale): string {
     return base;
 }
 
+/**
+ * format name for web page
+ */
+export function genTitleName(data: types.geoLocale): string[] {
+    let base = [`${data.name}, ${data.country}`];
+    if (data?.admin1 || data?.admin2 || data?.admin3 || data?.admin4) {
+        const extras = [];
+        data?.admin4 ? extras.push(data.admin4) : '';
+        data?.admin3 ? extras.push(data.admin3) : '';
+        data?.admin2 ? extras.push(data.admin2) : '';
+        data?.admin1 ? extras.push(data.admin1) : '';
+        base.push(extras.join(', '))
+    }
+    return base;
+}
+
 export function formatCoords(data: types.geoLocale): string {
     let latSide: 'N' | 'S' = 'N';
     let lonSide: 'E' | 'W' = 'E';
