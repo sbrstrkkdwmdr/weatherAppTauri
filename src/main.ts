@@ -1,8 +1,17 @@
 import moment from 'moment';
+import Feature from 'ol/Feature';
+import Map from 'ol/Map.js';
+import View from 'ol/View.js';
+import Point from 'ol/geom/Point';
+import TileLayer from 'ol/layer/Tile';
+import VectorLayer from 'ol/layer/Vector';
+import { useGeographic } from 'ol/proj.js';
+import { OSM } from 'ol/source';
+import VectorSource from 'ol/source/Vector';
+import { Circle, Fill, RegularShape, Stroke, Style } from 'ol/style.js';
 import * as func from './func';
 import * as generate from './generator';
 import * as types from './types';
-
 //search bar results handler
 document.getElementById('searchButton')!
     .addEventListener('click', async () => {
@@ -72,6 +81,48 @@ for (let child of searchChildren) {
     });
 }
 
+// map functionality
+
+useGeographic();
+
+const map = new Map({
+    layers: [
+        new TileLayer({
+            source: new OSM(),
+        }),
+    ],
+    target: 'map',
+    view: new View({
+        center: [0, 0],
+        zoom: 2,
+    }),
+});
+
+let vectorSource = new VectorSource({
+
+});
+
+let vectorLayer = new VectorLayer({
+    source: vectorSource,
+    declutter: true,
+    map,
+});
+
+map.on('click', async (e) => {
+    const curcoordinates = e.coordinate.reverse();
+    //lon lat
+    console.log(curcoordinates);
+    //TO DO --- click functionality
+
+    // let data = await func.getWeather(curcoordinates[0], curcoordinates[1], location);
+    // if (typeof data == 'string') {
+    //     errmsg.innerHTML = 'Failed to load weather data for ' + location.name + ' ' + location.id;
+    // } else {
+    //     display(data, location);
+    //     errmsg.innerHTML = '';
+    // }
+});
+
 // updating clock
 setInterval(() => {
     const title = document.getElementById('title') as HTMLHeadingElement;
@@ -85,5 +136,30 @@ async function display(data: types.weatherData | string, location: types.geoLoca
     } else {
         generate.daySummary(data, document.getElementById('contentDay') as HTMLDivElement, location);
         generate.week(data, document.getElementById('contentWeek') as HTMLDivElement);
+        vectorSource.clear();
+        const point: Feature = new Feature({
+            geometry: new Point([location.longitude, location.latitude]),
+            name: location.name,
+            style: new Circle({
+                fill: new Fill({ color: [163, 94, 212, 50] }),
+                stroke: new Stroke({ color: 'white', width: 1 }),
+                radius: 7.5,
+            }),
+        });
+        vectorSource.addFeature(point);
+        map.getView().animate({
+            duration: 2500,
+            center: [location.longitude, location.latitude],
+            rotation: 0,
+            zoom: 4
+        });
+        setTimeout(() => {
+            map.getView().animate({
+                duration: 1250,
+                center: [location.longitude, location.latitude],
+                rotation: 0,
+                zoom: 9.75
+            });
+        }, 2500);
     }
 }
