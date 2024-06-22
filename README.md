@@ -25,10 +25,14 @@ There may be a Microsoft Defender warning pop-up
 
 Run `npm i` to install all dependencies </br>
 Run `npm run dev`</br>
-*There may be inconsistencies between running it this way compared to the app itself*
+*There may be inconsistencies between running it this way compared to the app itself* </br>
 
 ### Building/compiling
 
 Run `npm run tb` </br>
-
 The `.exe` should be in `./src-tauri/target/release/<appname>.exe`
+
+### Building/compiling debug version
+
+Run `npm run tbd` </br>
+The `.exe` should be in `./src-tauri/target/debug/<appname>.exe` </br>
