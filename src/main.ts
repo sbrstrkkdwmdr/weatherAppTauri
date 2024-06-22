@@ -4,13 +4,13 @@ import * as generate from './generator';
 import * as types from './types';
 
 //search bar results handler
-document.getElementById('searchButton')
-    ?.addEventListener('click', async () => {
+document.getElementById('searchButton')!
+    .addEventListener('click', async () => {
         console.log('search button click');
         generateResults();
     });
 
-document.getElementById('searchBar')?.addEventListener('keyup', async (e) => {
+document.getElementById('searchBar')!.addEventListener('keyup', async (e) => {
     if (e.code == 'Enter') {
         console.log('search via enter');
         generateResults();
@@ -23,6 +23,7 @@ async function generateResults() {
     const searchResults = document.getElementById('searchSuggest') as HTMLDivElement;
     searchResults.innerHTML = '';
     for (const location of locationData.results) {
+        console.log('generating results');
         const elem = document.createElement('div');
         elem.innerHTML = func.genSearchName(location);
         elem.className = 'result';
@@ -39,15 +40,22 @@ async function generateResults() {
 // only show search results when focused on the search tab
 const searchSuggest = document.getElementById("searchSuggest") as HTMLElement;
 const searchChildren = document.getElementsByClassName("searchChildren");
-searchSuggest.style.height = '0px';
+
+const searchQuery = document.getElementById('searchQuery');
+
+const waitTime = 250; // click event ignored if results disappear too quickly
 
 for (let child of searchChildren) {
     child.addEventListener('focus', () => {
-        searchSuggest.style.height = 'max-content'; // show
+        setTimeout(() => {
+            searchSuggest.style.height = 'max-content'; // show
+        }, waitTime);
     });
 
     child.addEventListener('blur', () => {
-        searchSuggest.style.height = '0px'; // dont show
+        setTimeout(() => {
+            searchSuggest.style.height = '0px'; // dont show
+        }, waitTime);
     });
 }
 
@@ -58,7 +66,7 @@ setInterval(() => {
     title.innerHTML = rn.format('[It is currently] dddd, YYYY-MM-DD, HH:mm:ss');
 }, 500);
 
-async function display(data: types.weatherData | string, location:types.geoLocale) {
+async function display(data: types.weatherData | string, location: types.geoLocale) {
     if (typeof data == 'string') {
         (document.getElementById('title') as HTMLHeadingElement).innerHTML = 'There was an error trying find the weather at location NaN,NaN';
     } else {
