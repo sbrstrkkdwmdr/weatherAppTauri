@@ -13,3 +13,4 @@ ADD - map centres on city when loading weather data
 ## to do list
 - weather summaries for upcoming days
 - select weather via map
+- fix entire rows just disappearing (tauri app)

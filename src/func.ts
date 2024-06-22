@@ -4,7 +4,7 @@ import * as chartjs from 'chart.js';
 import * as testData from './data';
 import * as types from './types';
 
-const test = true;
+const test = false;
 
 export async function getLocation(name: string) {
     if (test) {
