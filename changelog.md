@@ -12,8 +12,8 @@ ADD - map centres on city when loading weather data </br>
 ADD - map changes size when focused/unfocused </br>
 ### other stuff
 ADD - minimum aspect ratio </br>
+FIX - data table rows disappearing</br>
 
 ## to do list
 - weather summaries for upcoming days </br>
 - select weather via map </br>
-- fix entire rows just disappearing</br>

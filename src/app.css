@@ -183,6 +183,12 @@ table {
     vertical-align: top;
 }
 
+#weeklyTable tr {
+    height: 21px;
+    max-height: 21px;
+}
+
+
 #dailyTable {
     border-spacing: 0;
     width: 500px;
@@ -190,6 +196,11 @@ table {
 
 #dailyTable td {
     vertical-align: top;
+}
+
+#dailyTable tr {
+    height: 21px;
+    max-height: 21px;
 }
 
 
