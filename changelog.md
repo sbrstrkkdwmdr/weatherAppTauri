@@ -13,6 +13,7 @@ ADD - map changes size when focused/unfocused </br>
 ### other stuff
 ADD - minimum aspect ratio </br>
 FIX - data table rows disappearing</br>
+FIX - timezone undefined when requesting weather data </br>
 
 ## to do list
 - weather summaries for upcoming days </br>

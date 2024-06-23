@@ -29,13 +29,13 @@ export async function getWeather(
         return testData.weather;
     } else {
         if (isNaN(latitude) || isNaN(longitude)) {
-            return 'error - NaN values given';
+            return 'NaN coordinates';
         }
         const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}`
             + "&hourly=temperature_2m,precipitation,rain,pressure_msl,windspeed_10m,windgusts_10m,precipitation_probability,showers,snowfall"
             + "&current_weather=true&forecast_days=6&past_days=1"
             + "&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,rain_sum,showers_sum,snowfall_sum,precipitation_probability_mean,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant,weather_code"
-            + `&timezone=${location.timezone}`;
+            + `&timezone=${location.timezone ?? 'Europe/London'}`;
         const data = await axios.get(url)
             .then(x => x.data)
             .catch(err => {
@@ -252,7 +252,7 @@ export function genTitleName(data: types.geoLocale): string[] {
         data?.admin3 ? extras.push(data.admin3) : '';
         data?.admin2 ? extras.push(data.admin2) : '';
         data?.admin1 ? extras.push(data.admin1) : '';
-        base.push(extras.join(', '))
+        base.push(extras.join(', '));
     }
     return base;
 }
