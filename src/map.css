@@ -1,11 +1,18 @@
 #mapContainer {
-    right:10px;
+    right: 10px;
     position: absolute;
-    width: 50%;
-    height: 50%;
+    border-radius: 15px;
 }
 
-.map {
-    width: 100%;
+#map {
+    width: 25vw;
     height: 400px;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: ease-in-out 500ms;
+}
+
+#map:focus {
+    width: 65vw;
+    height: 65vh;
 }
