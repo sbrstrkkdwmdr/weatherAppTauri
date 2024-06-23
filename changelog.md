@@ -7,10 +7,13 @@ first pre-release
 FIX - search results click event handler not working
 
 ## WIP
-ADD - map
-ADD - map centres on city when loading weather data
+### map
+ADD - map centres on city when loading weather data </br>
+ADD - map changes size when focused/unfocused </br>
+### other stuff
+ADD - minimum aspect ratio </br>
 
 ## to do list
-- weather summaries for upcoming days
-- select weather via map
-- fix entire rows just disappearing (tauri app)
+- weather summaries for upcoming days </br>
+- select weather via map </br>
+- fix entire rows just disappearing</br>
