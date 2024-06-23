@@ -1,5 +1,7 @@
 import * as types from './types';
 
+export const test:boolean = true; // true = use test data, false = use API
+
 export const weather: types.weatherData = {
     "latitude": 14.625,
     "longitude": 121,

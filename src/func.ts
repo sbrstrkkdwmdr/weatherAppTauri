@@ -4,10 +4,8 @@ import * as chartjs from 'chart.js';
 import * as testData from './data';
 import * as types from './types';
 
-const test = false;
-
 export async function getLocation(name: string) {
-    if (test) {
+    if (testData.test) {
         return testData.location;
     }
     const url = `https://geocoding-api.open-meteo.com/v1/search?name=${name.replaceAll(' ', '+')}&count=10&language=en&format=json`;
@@ -27,7 +25,7 @@ export async function getWeather(
     longitude: number,
     location: types.geoLocale,
 ) {
-    if (test) {
+    if (testData.test) {
         return testData.weather;
     } else {
         if (isNaN(latitude) || isNaN(longitude)) {
