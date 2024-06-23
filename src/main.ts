@@ -1,3 +1,4 @@
+import * as window from "@tauri-apps/api/window";
 import moment from 'moment';
 import Feature from 'ol/Feature';
 import Map from 'ol/Map.js';
@@ -12,6 +13,14 @@ import { Circle, Fill, RegularShape, Stroke, Style } from 'ol/style.js';
 import * as func from './func';
 import * as generate from './generator';
 import * as types from './types';
+
+// enforce minimum aspect ratio
+window.getCurrent().setMinSize(new window.PhysicalSize(960, 800))
+    .then(x => {
+        console.log('set min size');
+    })
+    ;
+
 //search bar results handler
 document.getElementById('searchButton')!
     .addEventListener('click', async () => {
@@ -82,7 +91,6 @@ for (let child of searchChildren) {
 }
 
 // map functionality
-
 useGeographic();
 
 const map = new Map({
@@ -121,6 +129,7 @@ map.on('click', async (e) => {
     //     display(data, location);
     //     errmsg.innerHTML = '';
     // }
+
 });
 
 // updating clock
