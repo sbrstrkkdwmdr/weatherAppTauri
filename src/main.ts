@@ -35,10 +35,11 @@ document.getElementById('searchBar')!.addEventListener('keyup', async (e) => {
     }
 });
 
+const errmsg = document.getElementById('errmsg') as HTMLDivElement;
+
 async function generateResults() {
     const searchBar = document.getElementById('searchBar') as HTMLInputElement;
     const searchResults = document.getElementById('searchSuggest') as HTMLDivElement;
-    const errmsg = document.getElementById('errmsg') as HTMLDivElement;
     errmsg.innerHTML = 'Loading results...';
     const locationData = await func.getLocation(encodeURIComponent(searchBar.value));
     if (locationData?.results?.length > 0) {
@@ -54,7 +55,7 @@ async function generateResults() {
                 errmsg.innerHTML = 'Loading data...';
                 let data = await func.getWeather(location.latitude, location.longitude, location);
                 if (typeof data == 'string') {
-                    errmsg.innerHTML = 'Failed to load weather data for ' + location.name + ' ' + location.id;
+                    errmsg.innerHTML = 'Failed to load weather data for ' + location.name + ' ' + location.id + ' (' + data + ')';
                 } else {
                     display(data, location);
                     errmsg.innerHTML = '';
@@ -143,8 +144,14 @@ async function display(data: types.weatherData | string, location: types.geoLoca
     if (typeof data == 'string') {
         (document.getElementById('title') as HTMLHeadingElement).innerHTML = 'There was an error trying find the weather at location NaN,NaN';
     } else {
-        generate.daySummary(data, document.getElementById('contentDay') as HTMLDivElement, location);
-        generate.week(data, document.getElementById('contentWeek') as HTMLDivElement);
+        try {
+            generate.daySummary(data, document.getElementById('contentDay') as HTMLDivElement, location);
+            generate.week(data, document.getElementById('contentWeek') as HTMLDivElement);
+            errmsg.innerHTML = '';
+            console.log(data);
+        } catch (err) {
+            errmsg.innerHTML = `There was an error trying to find weather data at location ${func.formatCoords(location)}`;
+        }
         vectorSource.clear();
         const point: Feature = new Feature({
             geometry: new Point([location.longitude, location.latitude]),
@@ -167,7 +174,7 @@ async function display(data: types.weatherData | string, location: types.geoLoca
                 duration: 1250,
                 center: [location.longitude, location.latitude],
                 rotation: 0,
-                zoom: 9.75
+                zoom: 8.75
             });
         }, 2500);
     }
