@@ -12,7 +12,7 @@
     transition: ease-in-out 500ms;
 }
 
-#map:focus {
+#map:hover {
     width: 65vw;
     height: 65vh;
 }
