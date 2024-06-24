@@ -23,7 +23,7 @@ export async function getLocation(name: string) {
 export async function getWeather(
     latitude: number,
     longitude: number,
-    location: types.geoLocale,
+    location: types.geoLocale | types.mapLocation,
 ) {
     if (testData.test) {
         return testData.weather;
@@ -35,7 +35,7 @@ export async function getWeather(
             + "&hourly=temperature_2m,precipitation,rain,pressure_msl,windspeed_10m,windgusts_10m,precipitation_probability,showers,snowfall"
             + "&current_weather=true&forecast_days=6&past_days=1"
             + "&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,rain_sum,showers_sum,snowfall_sum,precipitation_probability_mean,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant,weather_code"
-            + `&timezone=${location.timezone ?? 'Europe/London'}`;
+            + `&timezone=${(location as types.geoLocale)?.timezone ?? 'Europe/London'}`;
         const data = await axios.get(url)
             .then(x => x.data)
             .catch(err => {
@@ -245,7 +245,7 @@ export function genSearchName(data: types.geoLocale): string {
  * format name for web page
  */
 export function genTitleName(data: types.geoLocale): string[] {
-    let base = [`${data.name}, ${data.country}`];
+    let base = [`${data.name}, ${data?.country}`];
     if (data?.admin1 || data?.admin2 || data?.admin3 || data?.admin4) {
         const extras = [];
         data?.admin4 ? extras.push(data.admin4) : '';
@@ -257,7 +257,7 @@ export function genTitleName(data: types.geoLocale): string[] {
     return base;
 }
 
-export function formatCoords(data: types.geoLocale): string {
+export function formatCoords(data: types.geoLocale | types.mapLocation): string {
     let latSide: 'N' | 'S' = 'N';
     let lonSide: 'E' | 'W' = 'E';
 
@@ -267,5 +267,5 @@ export function formatCoords(data: types.geoLocale): string {
     if (data.longitude < 0) {
         lonSide = 'W';
     }
-    return `(${Math.abs(data.latitude) + latSide}, ${Math.abs(data.longitude) + lonSide})`;
+    return `(${Math.abs(data.latitude)?.toFixed(3) + latSide}, ${Math.abs(data.longitude)?.toFixed(3) + lonSide})`;
 }

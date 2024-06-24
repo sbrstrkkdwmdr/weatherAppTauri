@@ -123,13 +123,19 @@ map.on('click', async (e) => {
     console.log(curcoordinates);
     //TO DO --- click functionality
 
-    // let data = await func.getWeather(curcoordinates[0], curcoordinates[1], location);
-    // if (typeof data == 'string') {
-    //     errmsg.innerHTML = 'Failed to load weather data for ' + location.name + ' ' + location.id;
-    // } else {
-    //     display(data, location);
-    //     errmsg.innerHTML = '';
-    // }
+    const mapLocation:types.mapLocation = {
+        latitude: curcoordinates[0],
+        longitude: curcoordinates[1],
+        name: `${curcoordinates[0]?.toFixed(3)}, ${curcoordinates[1]?.toFixed(3)}`
+    }
+
+    let data = await func.getWeather(curcoordinates[0], curcoordinates[1], mapLocation);
+    if (typeof data == 'string') {
+        errmsg.innerHTML = 'Failed to load weather data for ' + curcoordinates[0] + ' ' + curcoordinates[1];
+    } else {
+    display(data, mapLocation);
+    errmsg.innerHTML = '';
+    }
 
 });
 
@@ -140,7 +146,7 @@ setInterval(() => {
     title.innerHTML = rn.format('[It is currently] dddd, YYYY-MM-DD, HH:mm:ss');
 }, 500);
 
-async function display(data: types.weatherData | string, location: types.geoLocale) {
+async function display(data: types.weatherData | string, location: types.geoLocale | types.mapLocation) {
     if (typeof data == 'string') {
         (document.getElementById('title') as HTMLHeadingElement).innerHTML = 'There was an error trying find the weather at location NaN,NaN';
     } else {
@@ -174,7 +180,7 @@ async function display(data: types.weatherData | string, location: types.geoLoca
                 duration: 1250,
                 center: [location.longitude, location.latitude],
                 rotation: 0,
-                zoom: 8.75
+                zoom: 7
             });
         }, 2500);
     }

@@ -21,6 +21,12 @@ export type geoLocale = {
     admin4?: string,
 };
 
+export type mapLocation = {
+    latitude: number,
+    longitude: number,
+    name: string, 
+}
+
 export type geoResults = { results: geoLocale[]; generationtime_ms: number, };
 
 

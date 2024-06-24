@@ -3,7 +3,7 @@ import moment from 'moment';
 import * as func from './func';
 import * as types from './types';
 
-export function daySummary(data: types.weatherData, main: HTMLElement, location: types.geoLocale) {
+export function daySummary(data: types.weatherData, main: HTMLElement, location: types.geoLocale | types.mapLocation) {
     main.innerHTML = '';
     const rn = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60));
     const today = data.current_weather!;
@@ -16,7 +16,11 @@ export function daySummary(data: types.weatherData, main: HTMLElement, location:
     //stuff that isnt the table
     const nonTable = document.createElement('div');
 
-    const fullName = func.genTitleName(location);
+    const fullName = 
+    (location as types.geoLocale)?.country 
+    ? 
+    func.genTitleName(location as types.geoLocale)
+    : [location.name, ''];
     const fullTitleDiv = document.createElement('div');
     fullTitleDiv.id = 'contentHeading';
     const placeTitle = document.createElement('h2');
@@ -26,8 +30,6 @@ export function daySummary(data: types.weatherData, main: HTMLElement, location:
     const subTitle = document.createElement('p');
     subTitle.innerHTML = fullName[1] ?? '';
     fullTitleDiv.appendChild(subTitle);
-
-    console.log(fullName);
 
     const coordParagraph = document.createElement('p');
     coordParagraph.innerHTML = func.formatCoords(location);
@@ -65,7 +67,6 @@ export function daySummary(data: types.weatherData, main: HTMLElement, location:
     const summaryTableRainOther = summaryTableRain.rows[1].insertCell(); // other rain
     summaryTableRainOther.colSpan = 2;
 
-
     today.is_day == 0 ? '🌒' : '☀';
 
     const curweather = func.weatherCodeToString(today.weathercode ?? 0);
@@ -102,7 +103,7 @@ Max <span id="spanMax">${temp.max}</span>°C`;
     rainTable.insertRow();
     for (let i = 0; i < 10; i++) {
         rainTable.rows[0].insertCell();
-        if (i <= Math.floor(rain.chance / 10)) {
+        if (i <= Math.round(rain.chance / 10)) {
             rainTable.rows[0].cells[i].style.backgroundColor = '#00FF00';
         } else {
             rainTable.rows[0].cells[i].style.backgroundColor = '#3c3c3c';
