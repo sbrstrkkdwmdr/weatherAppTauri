@@ -15,11 +15,15 @@ import * as generate from './generator';
 import * as types from './types';
 
 // enforce minimum aspect ratio
-window.getCurrent().setMinSize(new window.PhysicalSize(960, 800))
-    .then(x => {
-        console.log('set min size');
-    })
-    ;
+// try catch block to let vite work as intended
+try {
+    window.getCurrent().setMinSize(new window.PhysicalSize(960, 800))
+        .then(x => {
+            console.log('set min size');
+        });
+} catch (err) { }
+
+
 
 //search bar results handler
 document.getElementById('searchButton')!
@@ -123,18 +127,18 @@ map.on('click', async (e) => {
     console.log(curcoordinates);
     //TO DO --- click functionality
 
-    const mapLocation:types.mapLocation = {
+    const mapLocation: types.mapLocation = {
         latitude: curcoordinates[0],
         longitude: curcoordinates[1],
         name: `${curcoordinates[0]?.toFixed(3)}, ${curcoordinates[1]?.toFixed(3)}`
-    }
+    };
 
     let data = await func.getWeather(curcoordinates[0], curcoordinates[1], mapLocation);
     if (typeof data == 'string') {
         errmsg.innerHTML = 'Failed to load weather data for ' + curcoordinates[0] + ' ' + curcoordinates[1];
     } else {
-    display(data, mapLocation);
-    errmsg.innerHTML = '';
+        display(data, mapLocation);
+        errmsg.innerHTML = '';
     }
 
 });
@@ -151,8 +155,12 @@ async function display(data: types.weatherData | string, location: types.geoLoca
         (document.getElementById('title') as HTMLHeadingElement).innerHTML = 'There was an error trying find the weather at location NaN,NaN';
     } else {
         try {
-            generate.daySummary(data, document.getElementById('contentDay') as HTMLDivElement, location);
-            generate.week(data, document.getElementById('contentWeek') as HTMLDivElement);
+            const dayDiv = document.getElementById('contentDay') as HTMLDivElement;
+            const weekDiv = document.getElementById('contentWeek') as HTMLDivElement;
+            const rn = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60));
+
+            generate.daySummary(data, dayDiv, location, rn);
+            generate.week(data, weekDiv, location, dayDiv, rn);
             errmsg.innerHTML = '';
             console.log(data);
         } catch (err) {

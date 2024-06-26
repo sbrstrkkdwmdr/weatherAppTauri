@@ -116,7 +116,8 @@ table {
     border-spacing: 0;
 }
 
-#contentHeading h2, #contentHeading p {
+#contentHeading h2,
+#contentHeading p {
     margin: 2px;
 }
 
@@ -220,7 +221,7 @@ table {
     text-align: right;
 }
 
-#tableLabel td:first-child{
+#tableLabel td:first-child {
     color: #ffffff;
 }
 
@@ -234,7 +235,8 @@ table {
     color: #000000;
 }
 
-.weatherRow, .dayRow {
+.weatherRow,
+.dayRow {
     color: #cfcfcf;
 }
 
@@ -246,5 +248,54 @@ table {
 
 #tableDiv {
     width: 400px;
-    overflow: scroll;
+    overflow: auto;
+}
+
+/* carousel */
+.carousel {
+    scroll-snap-type: x mandatory;
+    display: flex;
+    width: 500px;
+}
+
+.carouselItem {
+    scroll-snap-align: center;
+    padding: 10px;
+    width: 150px;
+    min-width: 150px;
+    height: 150px;
+    margin: 10px;
+    background-color: #00000088;
+    border-radius: 25px;
+}
+
+.carouselItem:hover {
+    background-color: #005E5988; 
+}
+
+.carouselSelected {
+    background-color: #00601188; 
+}
+
+.carouselSelected:hover {
+    background-color: #003A5988; 
+}
+
+.carouselItem img {
+    width: 50px;
+    height: auto;
+    float: left;
+}
+
+.carouselTemp {
+    margin-top: 0;
+    float: right;
+    right: 0;
+    white-space: pre;
+}
+
+.carouselWeather {
+    text-align: center;
+    margin-top: 75px;
+    white-space: pre;
 }

@@ -10,6 +10,9 @@ FIX - search results click event handler not working
 ### map
 ADD - map centres on city when loading weather data </br>
 ADD - map changes size when focused/unfocused </br>
+### day carousel
+ADD - carousel showing smaller more summarised info of each day
+ADD - clicking on carousel updates main summary to show info for that day
 ### other stuff
 ADD - minimum aspect ratio </br>
 FIX - data table rows disappearing</br>

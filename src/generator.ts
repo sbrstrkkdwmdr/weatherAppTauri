@@ -3,9 +3,9 @@ import moment from 'moment';
 import * as func from './func';
 import * as types from './types';
 
-export function daySummary(data: types.weatherData, main: HTMLElement, location: types.geoLocale | types.mapLocation) {
+export function daySummary(data: types.weatherData, main: HTMLElement, location: types.geoLocale | types.mapLocation, dataTime: moment.Moment) {
+    const rn = moment();
     main.innerHTML = '';
-    const rn = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60));
     const today = data.current_weather!;
     const daily = data.daily!;
     const hourly = data.hourly!;
@@ -16,11 +16,11 @@ export function daySummary(data: types.weatherData, main: HTMLElement, location:
     //stuff that isnt the table
     const nonTable = document.createElement('div');
 
-    const fullName = 
-    (location as types.geoLocale)?.country 
-    ? 
-    func.genTitleName(location as types.geoLocale)
-    : [location.name, ''];
+    const fullName =
+        (location as types.geoLocale)?.country
+            ?
+            func.genTitleName(location as types.geoLocale)
+            : [location.name, ''];
     const fullTitleDiv = document.createElement('div');
     fullTitleDiv.id = 'contentHeading';
     const placeTitle = document.createElement('h2');
@@ -42,9 +42,27 @@ export function daySummary(data: types.weatherData, main: HTMLElement, location:
     smolTxt.className = 'smol';
     nonTable.appendChild(smolTxt);
 
+    const dayTitle = document.createElement('h2');
+    dayTitle.innerHTML = dataTime.format('ddd, YYYY-MM-DD');
+    nonTable.appendChild(dayTitle);
+
+    main.appendChild(nonTable);
+    dayInfo(data, nonTable, dataTime);
+    dayRow(data, main, dataTime);
+
+}
+
+/**
+ * gets info for the current/selected day
+ */
+export function dayInfo(data: types.weatherData, main: HTMLElement, dataTime: moment.Moment) {
+    const today = data.current_weather!;
+    const daily = data.daily!;
 
     const localTime = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60))
         .format("ddd, DD MMM YYYY HH:mm:ss Z");
+
+    const todayIndex = daily.time.indexOf(dataTime.format("YYYY-MM-DD"));
 
     const summary = document.createElement('div');
     summary.id = 'summaryDiv';
@@ -69,7 +87,7 @@ export function daySummary(data: types.weatherData, main: HTMLElement, location:
 
     today.is_day == 0 ? '🌒' : '☀';
 
-    const curweather = func.weatherCodeToString(today.weathercode ?? 0);
+    const curweather = func.weatherCodeToString(daily.weathercode![todayIndex] ?? today.weathercode ?? 0);
     summaryTableInfo.innerHTML =
         `Local time is ${localTime}
 It is currently ${today.is_day == 0 ? 'night' : 'day'}.
@@ -95,8 +113,8 @@ ${curweather.icon} ${curweather.string}.
     };
 
     summaryTableTemp.innerHTML = `Cur <span id="spanCur">${temp.cur}</span>°C
-Min <span id="spanMin">${temp.min}</span>°C 
-Max <span id="spanMax">${temp.max}</span>°C`;
+Max <span id="spanMax">${temp.max}</span>°C
+Min <span id="spanMin">${temp.min}</span>°C`;
 
     const rainTable = document.createElement('table');
     rainTable.id = 'rainPercent';
@@ -127,9 +145,18 @@ Max gusts: <span id="spanMax">${wind.maxGust}</span>km/h
 `;
     summaryTableRainSpot.appendChild(summaryTableRain);
     summary.appendChild(summaryTable);
-    nonTable.appendChild(summary);
-    main.appendChild(nonTable);
-    // lil table of data
+    main.appendChild(summary);
+}
+
+/**
+ * generate small graph table for hourly weather info
+ */
+export function dayRow(data: types.weatherData, main: HTMLElement, dataTime: moment.Moment) {
+    const daily = data.daily!;
+    const hourly = data.hourly!;
+
+    let pos = hourly.time.indexOf(dataTime.format("YYYY-MM-DD[T]HH:00"));
+
     const dailyTable = document.createElement('table');
     dailyTable.id = 'dailyTable';
     const table = document.createElement('table');
@@ -153,8 +180,6 @@ Max gusts: <span id="spanMax">${wind.maxGust}</span>km/h
     if (pos > 7) {
         pos -= 7;
     }
-    console.log(pos);
-    console.log(hourly.time.length);
     if (hourly.time.length - pos < 24) {
         pos -= 24 - (hourly.time.length - pos);
     }
@@ -201,8 +226,8 @@ Max gusts: <span id="spanMax">${wind.maxGust}</span>km/h
 
         setTimeout(async () => {
             if (
-                (+rn.format("HH") == +kyou.format("HH")) &&
-                (+rn.format("DD") == +kyou.format("DD"))
+                (+dataTime.format("HH") == +kyou.format("HH")) &&
+                (+dataTime.format("DD") == +kyou.format("DD"))
             ) {
                 const bg = '#ff000044';
                 const curtimcl = 'currentTimeCell';
@@ -263,11 +288,70 @@ Max gusts: <span id="spanMax">${wind.maxGust}</span>km/h
     main.appendChild(dailyTable);
 }
 
-export function graph(data: types.weatherData, main: HTMLElement) {
+
+export function week(data: types.weatherData, main: HTMLElement, location: types.geoLocale | types.mapLocation, dayMain: HTMLElement, dataTime: moment.Moment) {
+    main.innerHTML = '';
+
+    dayCarousel(data, main, dataTime, location, dayMain);
+    weekRow(data, main, dataTime);
 }
 
-export function week(data: types.weatherData, main: HTMLElement) {
-    main.innerHTML = '';
+/**
+ * adds row of days to select beneath main day info
+ */
+export function dayCarousel(data: types.weatherData, main: HTMLElement, dataTime: moment.Moment, location: types.geoLocale | types.mapLocation, dayMain: HTMLElement) {
+    const daily = data.daily!;
+    const carousel = document.createElement('div');
+    carousel.className = 'carousel';
+    for (let i = 0; i < daily.time.length; i++) {
+        const item = document.createElement('div');
+        item.className = 'carouselItem';
+        const time = moment(daily.time[i]);
+        const head = document.createElement('h3');
+        head.innerHTML = time.format("ddd, YYYY-MM-DD");
+        item.appendChild(head);
+
+        const weatherCheck = func.weatherCodeToString(daily.weathercode[i]);
+        if (weatherCheck.string !== 'Clear') {
+            const img = document.createElement('img');
+            img.src = './weatherState/' + daily.weathercode[i] + '.png';
+            item.appendChild(img);
+        }
+
+        const temperature = document.createElement('p');
+        temperature.innerHTML = `Min <span id="spanMin">${daily.temperature_2m_min[i]}</span>°C 
+Max <span id="spanMax">${daily.temperature_2m_max[i]}</span>°C`;
+        temperature.className = 'carouselTemp';
+        item.appendChild(temperature);
+
+        const weather = document.createElement('p');
+        weather.innerHTML = weatherCheck.string;
+        weather.className = 'carouselWeather';
+        item.appendChild(weather);
+
+        if (dataTime.format('YYYY-MM-DD') == time.format('YYYY-MM-DD')) {
+            item.classList.add('carouselSelected');
+        }
+
+        item.addEventListener('click', e => {
+            console.log('hello');
+            daySummary(data, dayMain, location, time);
+            for(const item of carousel.children){
+                item.classList.remove('carouselSelected');
+            }
+            item.classList.add('carouselSelected');
+        });
+
+        carousel.appendChild(item);
+    }
+
+    main.appendChild(carousel);
+}
+
+/**
+ * creates weather table
+ */
+export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: moment.Moment) {
     const weeklyTable = document.createElement('table');
     weeklyTable.id = 'weeklyTable';
     const table = document.createElement('table');
@@ -289,9 +373,6 @@ export function week(data: types.weatherData, main: HTMLElement) {
     preChRow.className = 'preChRow';
     windRow.className = 'windRow';
     gustRow.className = 'gustRow';
-
-    const rn = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60));
-    // cell bg darkness determined by time of day maybe
 
     const hourly = data.hourly!;
     const hrSeperator = 4; // do every x hours. make sure its factors of 8 or 24
@@ -349,13 +430,13 @@ export function week(data: types.weatherData, main: HTMLElement) {
 
         setTimeout(async () => {
             if (
-                ((+rn.format("HH") < +kyou.format("HH") + (hrSeperator / 2)) &&
-                    (+rn.format("HH") >= +kyou.format("HH") - (hrSeperator / 2)) &&
-                    (+rn.format("DD") == +kyou.format("DD"))) ||
+                ((+dataTime.format("HH") < +kyou.format("HH") + (hrSeperator / 2)) &&
+                    (+dataTime.format("HH") >= +kyou.format("HH") - (hrSeperator / 2)) &&
+                    (+dataTime.format("DD") == +kyou.format("DD"))) ||
                 ((+kyou.format("HH") == 0) &&
-                    (+rn.format("HH") < 24 + (hrSeperator / 2)) &&
-                    (+rn.format("HH") >= 24 - (hrSeperator / 2)) &&
-                    (+rn.format("DD") + 1 == +kyou.format("DD")))
+                    (+dataTime.format("HH") < 24 + (hrSeperator / 2)) &&
+                    (+dataTime.format("HH") >= 24 - (hrSeperator / 2)) &&
+                    (+dataTime.format("DD") + 1 == +kyou.format("DD")))
             ) {
                 const bg = '#ff000044';
                 const curtimcl = 'currentTimeCell';
