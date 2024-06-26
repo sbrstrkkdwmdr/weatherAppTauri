@@ -260,13 +260,14 @@ table {
 
 .carouselItem {
     scroll-snap-align: center;
-    padding: 10px;
-    width: 150px;
-    min-width: 150px;
-    height: 150px;
+    padding: 5px;
+    width: 90px;
+    min-width: 90px;
+    height: 90px;
     margin: 10px;
     background-color: #00000088;
-    border-radius: 25px;
+    border-radius: 15px;
+    justify-content: center;
 }
 
 .carouselItem:hover {
@@ -281,8 +282,14 @@ table {
     background-color: #003A5988; 
 }
 
+.carouselItem h3 {
+    margin:0;
+    font-size: 14px;
+}
+
 .carouselItem img {
-    width: 50px;
+    margin-top: 2px;
+    width: 30px;
     height: auto;
     float: left;
 }
@@ -292,10 +299,12 @@ table {
     float: right;
     right: 0;
     white-space: pre;
+    font-size: 11.5px;
 }
 
 .carouselWeather {
     text-align: center;
-    margin-top: 75px;
+    margin-top: 40px;
     white-space: pre;
+    font-size: 12px;
 }
