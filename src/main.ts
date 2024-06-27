@@ -148,7 +148,7 @@ setInterval(() => {
     const title = document.getElementById('title') as HTMLHeadingElement;
     const rn = moment();
     title.innerHTML = rn.format('[It is currently] dddd, YYYY-MM-DD, HH:mm:ss');
-}, 500);
+}, 250);
 
 async function display(data: types.weatherData | string, location: types.geoLocale | types.mapLocation) {
     if (typeof data == 'string') {
