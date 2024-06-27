@@ -1,37 +1,4 @@
-# App Changelog
-
-## 0.1.0-alpha
-
-first pre-release
-
-## 0.1.0-alpha.2
-
-FIX - search results click event handler not working
-
-## 0.1.0-alpha.4
-
-### map
-
-ADD - map centres on city when loading weather data </br>
-ADD - map changes size when focused/unfocused </br>
-
-### day carousel
-
-ADD - carousel showing smaller more summarised info of each day
-ADD - clicking on carousel updates main summary to show info for that day
-
-### other stuff
-
-ADD - minimum aspect ratio </br>
-FIX - data table rows disappearing</br>
-FIX - timezone undefined when requesting weather data </br>
-ADD - local time updates alongside main clock</br>
-ADD - weather backgrounds </br>
-ADD - centre all content</br>
-QOL - translucent weather graph/table</br>
-FIX - weather graph/table icons</br>
-
-## WIP
+# Changelog
 
 ## to do list
 
@@ -40,3 +7,40 @@ FIX - weather graph/table icons</br>
 - edit font 
 - using map to select shows location name
 - map is over everything (z-index)
+
+## WIP
+
+## 0.1.0-alpha.4
+
+### Fixes
+- data table rows disappearing
+- timezone undefined when requesting weather data 
+- weather graph/table icons always being "clear weather"
+
+### Changes
+- centre all content
+- translucent weather graph/table
+
+### Additions
+- minimum aspect ratio 
+- local time updates alongside main clock
+- weather backgrounds 
+- weather images
+
+#### map
+- map centres on city when loading weather data
+- map changes size when focused/unfocused
+
+#### day carousel
+- carousel showing smaller more summarised info of each day
+- clicking on carousel updates main summary to show info for that day
+
+## 0.1.0-alpha.3
+
+## 0.1.0-alpha.2
+
+### Fixed
+- Search results click event handler not working
+
+## 0.1.0-alpha
+first pre-release

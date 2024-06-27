@@ -11,7 +11,7 @@ a simple weather app developed using Vite and Tauri
 
 [![license](https://img.shields.io/github/license/sbrstrkkdwmdr/weatherAppTauri?label=license)](https://github.com/sbrstrkkdwmdr/weatherAppTauri/blob/main/LICENSE)
 [![lastcommit](https://img.shields.io/github/last-commit/sbrstrkkdwmdr/weatherAppTauri)](https://github.com/sbrstrkkdwmdr/weatherAppTauri)
-[![changelog](https://img.shields.io/badge/Changelog-AAAAAA)](https://github.com/sbrstrkkdwmdr/weatherAppTauri/blob/main/changelog.md)</br>
+[![changelog](https://img.shields.io/badge/Changelog-E05735)](https://github.com/sbrstrkkdwmdr/weatherAppTauri/blob/main/changelog.md)</br>
 
 im not a graphic designer so it might look a lil ugly (😭)
 
@@ -40,6 +40,8 @@ Run `npm run tbd` </br>
 The `.exe` should be in `./src-tauri/target/debug/<appname>.exe` </br>
 
 ## credits
+
+https://github.com/sbrstrkkdwmdr/weatherAppTauri/blob/master/changelog.md
 
 | Source | Usage |
 | --- | --- |
