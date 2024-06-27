@@ -20,6 +20,7 @@ FIX - timezone undefined when requesting weather data </br>
 ADD - local time updates alongside main clock
 ADD - weather backgrounds 
 ADD - centre all content
+QOL - translucent weather graph/table
 
 ## to do list
 - weather summaries for upcoming days </br>

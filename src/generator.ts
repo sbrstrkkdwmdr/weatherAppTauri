@@ -1,5 +1,6 @@
 import * as chartjs from 'chart.js';
 import moment from 'moment';
+import * as testData from './data';
 import * as func from './func';
 import * as types from './types';
 
@@ -175,6 +176,7 @@ export function dayRow(data: types.weatherData, main: HTMLElement, dataTime: mom
 
     timeRow.className = 'timeRow';
     weatherRow.className = 'weatherRow';
+    weatherRow.style.backgroundColor = '#1f1f1f' + testData.transparencyHex;
     tempRow.className = 'tempRow';
     precipRow.className = 'precipRow';
     preChRow.className = 'preChRow';
@@ -200,8 +202,11 @@ export function dayRow(data: types.weatherData, main: HTMLElement, dataTime: mom
         const sunrise = moment(daily.sunrise![Math.floor(pos / 24)]);
         const sunset = moment(daily.sunset![Math.floor(pos / 24)]);
 
-        const weatherCode: number = hourly.weathercode?.[pos] ?? 0;
-        weatherRow.cells[i].innerHTML = func.weatherCodeToString(weatherCode).icon;
+        const weatherCode: number = hourly.weathercode?.[pos] ?? hourly.weather_code?.[pos] ?? 0;
+        // weatherRow.cells[i].innerHTML = func.weatherCodeToString(weatherCode).icon;
+        const weatherImg = document.createElement('img');
+        weatherImg.src = `./weatherState/${weatherCode}.png`;
+        weatherRow.cells[i].appendChild(weatherImg);
 
         tempRow.cells[i].innerHTML = '' + hourly.temperature_2m![pos];
         cellColour(tempRow.cells[i], hourly.temperature_2m![pos], 'temp');
@@ -220,12 +225,12 @@ export function dayRow(data: types.weatherData, main: HTMLElement, dataTime: mom
         cellColour(gustRow.cells[i], hourly.windgusts_10m![pos], 'wind');
 
         if (kyou.isAfter(sunrise) && kyou.isBefore(sunset)) {
-            timeRow.cells[i].style.backgroundColor = '#999999';
+            timeRow.cells[i].style.backgroundColor = '#FFD800' + testData.transparencyHex;
+            // timeRow.cells[i].style.color = '#000000';
         } else {
-            timeRow.cells[i].style.backgroundColor = '#000000';
-            timeRow.cells[i].style.color = '#FFFFFF';
+            timeRow.cells[i].style.backgroundColor = '#510077' + testData.transparencyHex;
+            // timeRow.cells[i].style.color = '#FFFFFF';
         }
-
         timeRow.cells[i].innerHTML = kyou.format("HH");
 
         setTimeout(async () => {
@@ -315,7 +320,7 @@ export function dayCarousel(data: types.weatherData, main: HTMLElement, dataTime
         head.innerHTML = time.format("ddd, YYYY-MM-DD");
         item.appendChild(head);
 
-        const weatherCheck = func.weatherCodeToString(daily.weathercode[i]);
+        const weatherCheck = func.weatherCodeToString(daily.weather_code[i]);
         if (weatherCheck.string !== 'Clear') {
             const img = document.createElement('img');
             img.src = './weatherState/' + daily.weathercode[i] + '.png';
@@ -370,8 +375,10 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
     const gustRow = table.insertRow(); // km/h
 
     dayRow.className = 'dayRow';
+    dayRow.style.backgroundColor = '#1f1f1f' + testData.transparencyHex;
     timeRow.className = 'timeRow';
     weatherRow.className = 'weatherRow';
+    weatherRow.style.backgroundColor = '#1f1f1f' + testData.transparencyHex;
     tempRow.className = 'tempRow';
     precipRow.className = 'precipRow';
     preChRow.className = 'preChRow';
@@ -394,8 +401,12 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
         const sunrise = moment(data.daily?.sunrise![Math.floor(i / 24)]);
         const sunset = moment(data.daily?.sunset![Math.floor(i / 24)]);
 
-        const weatherCode: number = data.hourly?.weathercode?.[i] ?? 0;
-        weatherRow.cells[pos].innerHTML = func.weatherCodeToString(weatherCode).icon;
+        
+        const weatherCode: number = hourly.weathercode?.[i] ?? hourly.weather_code?.[i] ?? 0;
+        // weatherRow.cells[pos].innerHTML = func.weatherCodeToString(weatherCode).icon;
+        const weatherImg = document.createElement('img');
+        weatherImg.src = `./weatherState/${weatherCode}.png`;
+        weatherRow.cells[pos].appendChild(weatherImg);
 
         const curtemp = averageData(data.hourly!.temperature_2m!, i, hrSeperator);
         tempRow.cells[pos].innerHTML = '' + averageData(data.hourly!.temperature_2m!, i, hrSeperator);
@@ -417,10 +428,12 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
         cellColour(gustRow.cells[pos], +gust, 'wind');
 
         if (kyou.isAfter(sunrise) && kyou.isBefore(sunset)) {
-            timeRow.cells[pos].style.backgroundColor = '#999999';
+            timeRow.cells[pos].style.backgroundColor = '#FFD800' + testData.transparencyHex;
+            // timeRow.cells[pos].style.color = '#000000';
         } else {
-            timeRow.cells[pos].style.backgroundColor = '#000000';
-            timeRow.cells[pos].style.color = '#FFFFFF';
+            console.log('eee')
+            timeRow.cells[pos].style.backgroundColor = '#510077' + testData.transparencyHex;
+            // timeRow.cells[pos].style.color = '#FFFFFF';
         }
 
         if (i % (hrSeperator) == 0) {
@@ -505,12 +518,11 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
  * calculate cell colour based off of the number given
  */
 function cellColour(cell: HTMLTableCellElement, value: number, type: 'wind' | 'temp' | 'rain' | 'rainchance',) {
-    let main = '#FFFFFF';
+    let main = testData.zeroColour;
     switch (type) {
         case 'wind': {
             switch (true) {
                 case value <= 0:
-                    main = '#FFFFFF';
                     break;
                 case value < 10:
                     main = '#0094FF';
@@ -539,7 +551,6 @@ function cellColour(cell: HTMLTableCellElement, value: number, type: 'wind' | 't
         case 'temp': {
             switch (true) {
                 case value <= 0:
-                    main = '#FFFFFF';
                     break;
                 case value < 10:
                     main = '#0094FF';
@@ -565,7 +576,6 @@ function cellColour(cell: HTMLTableCellElement, value: number, type: 'wind' | 't
         case 'rain': {
             switch (true) {
                 case value <= 0:
-                    main = '#FFFFFF';
                     break;
                 case value < 0.5:
                     main = '#0094FF';
@@ -591,7 +601,6 @@ function cellColour(cell: HTMLTableCellElement, value: number, type: 'wind' | 't
         case 'rainchance': {
             switch (true) {
                 case value <= 0:
-                    main = '#FFFFFF';
                     break;
                 case value < 6:
                     main = '#0094FF';
@@ -615,6 +624,7 @@ function cellColour(cell: HTMLTableCellElement, value: number, type: 'wind' | 't
         }
             break;
     }
+    main += main == testData.zeroColour ? '' : testData.transparencyHex; //add transparency
     cell.style.backgroundColor = main;
 }
 
