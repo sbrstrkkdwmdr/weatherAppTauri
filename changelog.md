@@ -24,7 +24,7 @@ QOL - translucent weather graph/table
 FIX - weather graph/table icons
 
 ## to do list
-- weather summaries for upcoming days </br>
 - select weather via map </br>
-- weather row data resizable </br>
-- transparent weather row </br>
+- fix percentage in summary </br>
+- add weather icon </br>
+- edit font </br>
