@@ -118,24 +118,46 @@ table {
 
 #contentHeading h2,
 #contentHeading p {
-    margin: 2px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    align-tracks: center;
+}
+
+#contentHeading {
+    width: max-content;
+    text-align: center;
+    margin: auto;
 }
 
 .smol {
     font-size: xx-small;
+    width: max-content;
+    margin: auto;
 }
 
 #summaryTable {
     /* border: 1px solid black; */
     border-spacing: 1px;
+    border-radius: 15px;
+    margin: auto;
 }
+
+#summaryDiv {}
+
 
 #summaryTable td {
     width: fit-content;
     white-space: pre;
-    border: 1px dotted black;
+    /* border: 1px dotted black; */
     vertical-align: top;
+    padding: 5px;
+    font-size: 18px;
 }
+
+/* #summaryTable >tbody>tr>td {
+    background-color: #00000066;
+    border-radius: 15px;
+} */
 
 #rainPercent tr {
     height: 21px;
@@ -175,9 +197,26 @@ table {
 
 /* hourly data */
 
+#dailyTable {
+    margin: auto;
+    border-spacing: 0;
+    min-width: 400px;
+}
+
+#dailyTable td {
+    vertical-align: top;
+}
+
+#dailyTable tr {
+    height: 21px;
+    max-height: 21px;
+}
+
 #weeklyTable {
     border-spacing: 0;
-    width: 500px;
+    max-width: 500px;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 #weeklyTable td {
@@ -190,23 +229,19 @@ table {
 }
 
 
-#dailyTable {
-    border-spacing: 0;
-    width: 500px;
+#mainContent {
+    margin-top: 50px;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+    text-align: center;
 }
-
-#dailyTable td {
-    vertical-align: top;
-}
-
-#dailyTable tr {
-    height: 21px;
-    max-height: 21px;
-}
-
 
 #contentWeek {
     display: inline-block;
+    width: max-content;
+    margin: auto;
 }
 
 #tableLabel {
@@ -247,7 +282,8 @@ table {
 }
 
 #tableDiv {
-    width: 400px;
+    min-width: 400px;
+    max-width: 65vw;
     overflow: auto;
 }
 
@@ -256,6 +292,8 @@ table {
     scroll-snap-type: x mandatory;
     display: flex;
     width: 500px;
+    justify-content: center;
+    margin:auto;
 }
 
 .carouselItem {
@@ -265,25 +303,25 @@ table {
     min-width: 90px;
     height: 90px;
     margin: 10px;
-    background-color: #00000088;
+    background-color: #00000066;
     border-radius: 15px;
     justify-content: center;
 }
 
 .carouselItem:hover {
-    background-color: #005E5988; 
+    background-color: #005E5988;
 }
 
 .carouselSelected {
-    background-color: #00601188; 
+    background-color: #00601188;
 }
 
 .carouselSelected:hover {
-    background-color: #003A5988; 
+    background-color: #003A5988;
 }
 
 .carouselItem h3 {
-    margin:0;
+    margin: 0;
     font-size: 14px;
 }
 

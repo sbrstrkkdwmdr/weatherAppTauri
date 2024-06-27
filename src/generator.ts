@@ -83,7 +83,6 @@ export function dayInfo(data: types.weatherData, main: HTMLElement, dataTime: mo
     summaryTableRainOther.colSpan = 2;
 
     today.is_day == 0 ? '🌒' : '☀';
-
     const curweather = func.weatherCodeToString(daily.weathercode![todayIndex] ?? today.weathercode ?? 0);
 
     //live update cur time
@@ -97,7 +96,7 @@ ${curweather.icon} ${curweather.string}.
 `;
     }, 250);
 
-    document
+    document.body.style.backgroundImage = 'linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ),' + `url(./backgrounds/${daily.weathercode![todayIndex] ?? 0}.png)`;
 
     const temp = {
         cur: today.temperature,

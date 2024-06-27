@@ -9,10 +9,10 @@
     height: 200px;
     border-radius: 15px;
     overflow: hidden;
-    transition: ease-in-out 500ms;
+    transition: ease-in-out 1500ms;
 }
 
 #map:hover {
-    width: 65vw;
-    height: 65vh;
+    width: 35vw;
+    height: 50vh;
 }

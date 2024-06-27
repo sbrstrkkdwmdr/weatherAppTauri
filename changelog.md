@@ -17,7 +17,12 @@ ADD - clicking on carousel updates main summary to show info for that day
 ADD - minimum aspect ratio </br>
 FIX - data table rows disappearing</br>
 FIX - timezone undefined when requesting weather data </br>
+ADD - local time updates alongside main clock
+ADD - weather backgrounds 
+ADD - centre all content
 
 ## to do list
 - weather summaries for upcoming days </br>
 - select weather via map </br>
+- weather row data resizable </br>
+- transparent weather row </br>
