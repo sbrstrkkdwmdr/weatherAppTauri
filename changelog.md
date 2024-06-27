@@ -21,6 +21,7 @@ ADD - local time updates alongside main clock
 ADD - weather backgrounds 
 ADD - centre all content
 QOL - translucent weather graph/table
+FIX - weather graph/table icons
 
 ## to do list
 - weather summaries for upcoming days </br>
