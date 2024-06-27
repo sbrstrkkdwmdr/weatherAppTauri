@@ -59,9 +59,6 @@ export function dayInfo(data: types.weatherData, main: HTMLElement, dataTime: mo
     const today = data.current_weather!;
     const daily = data.daily!;
 
-    const localTime = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60))
-        .format("ddd, DD MMM YYYY HH:mm:ss Z");
-
     const todayIndex = daily.time.indexOf(dataTime.format("YYYY-MM-DD"));
 
     const summary = document.createElement('div');
@@ -88,11 +85,19 @@ export function dayInfo(data: types.weatherData, main: HTMLElement, dataTime: mo
     today.is_day == 0 ? '🌒' : '☀';
 
     const curweather = func.weatherCodeToString(daily.weathercode![todayIndex] ?? today.weathercode ?? 0);
-    summaryTableInfo.innerHTML =
-        `Local time is ${localTime}
+
+    //live update cur time
+    setInterval(async () => {
+        const localTime = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60))
+            .format("ddd, DD MMM YYYY HH:mm:ss Z");
+        summaryTableInfo.innerHTML =
+            `Local time is ${localTime}
 It is currently ${today.is_day == 0 ? 'night' : 'day'}.
 ${curweather.icon} ${curweather.string}.
 `;
+    }, 250);
+
+    document
 
     const temp = {
         cur: today.temperature,
@@ -336,7 +341,7 @@ Max <span id="spanMax">${daily.temperature_2m_max[i]}</span>°C`;
         item.addEventListener('click', e => {
             console.log('hello');
             daySummary(data, dayMain, location, time);
-            for(const item of carousel.children){
+            for (const item of carousel.children) {
                 item.classList.remove('carouselSelected');
             }
             item.classList.add('carouselSelected');
