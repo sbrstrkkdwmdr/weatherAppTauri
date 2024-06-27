@@ -35,7 +35,8 @@ FIX - weather graph/table icons</br>
 
 ## to do list
 
-- select weather via map </br>
-- fix percentage in summary </br>
-- add weather icon </br>
-- edit font </br>
+- fix percentage in summary 
+- add weather icon 
+- edit font 
+- using map to select shows location name
+- map is over everything (z-index)
