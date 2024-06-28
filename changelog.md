@@ -2,13 +2,19 @@
 
 ## to do list
 
-- fix percentage in summary 
-- add weather icon 
 - edit font 
 - using map to select shows location name
-- map is over everything (z-index)
+- get proper background images
+- option to switch between current day and weekly graph
+- show air quality, pressure, visibility, humidity
 
 ## WIP
+
+### Changes
+- move local time and currently day/night out of the summary table
+- show weather icon in summary table
+- fix rain percentage bar in summary table
+- map is shown over text elements (on hover)
 
 ## 0.1.0-alpha.4
 

@@ -10,10 +10,10 @@ import { useGeographic } from 'ol/proj.js';
 import { OSM } from 'ol/source';
 import VectorSource from 'ol/source/Vector';
 import { Circle, Fill, RegularShape, Stroke, Style } from 'ol/style.js';
+import * as testData from './data';
 import * as func from './func';
 import * as generate from './generator';
 import * as types from './types';
-
 // enforce minimum aspect ratio
 // try catch block to let vite work as intended
 try {
@@ -148,7 +148,7 @@ setInterval(() => {
     const title = document.getElementById('title') as HTMLHeadingElement;
     const rn = moment();
     title.innerHTML = rn.format('[It is currently] dddd, YYYY-MM-DD, HH:mm:ss');
-}, 250);
+}, testData.clockDelay);
 
 async function display(data: types.weatherData | string, location: types.geoLocale | types.mapLocation) {
     if (typeof data == 'string') {

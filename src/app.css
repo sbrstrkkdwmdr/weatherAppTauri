@@ -11,7 +11,7 @@
 }
 
 body {
-    background-image: linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ) url('0.png');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(../public/backgrounds/0.png);
     color: white;
     /* overflow-y: hidden; */
     /* overflow-x: hidden; */
@@ -155,7 +155,7 @@ table {
     margin: auto;
 }
 
-#summaryDiv {}
+/* #summaryDiv {} */
 
 
 #summaryTable td {
@@ -163,8 +163,27 @@ table {
     white-space: pre;
     /* border: 1px dotted black; */
     vertical-align: top;
-    padding: 5px;
     font-size: 18px;
+    padding:5px;
+    text-align: center;
+}
+
+#summaryTable>tbody>tr>td{
+    padding-left: 35px;
+    padding-right: 35px;
+}
+
+#summaryTable img {
+    height: auto;
+    width: 75px;
+}
+
+#summaryTable td:nth-child(1) {
+    text-align: right;
+}
+
+#summaryTable td:nth-child(2) {
+    text-align: left;
 }
 
 /* #summaryTable >tbody>tr>td {
@@ -228,8 +247,8 @@ table {
 #weeklyTable {
     border-spacing: 0;
     max-width: 500px;
-    margin-left:auto;
-    margin-right:auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #weeklyTable td {
@@ -302,7 +321,7 @@ table {
     display: flex;
     width: 500px;
     justify-content: center;
-    margin:auto;
+    margin: auto;
 }
 
 .carouselItem {
@@ -352,9 +371,9 @@ table {
 .carouselWeather {
     text-align: center;
     margin-top: 35px;
-    margin-left:auto;
-    margin-right:auto;
-    width:min-content;
+    margin-left: auto;
+    margin-right: auto;
+    width: min-content;
     white-space: pre;
     font-size: 12px;
 }

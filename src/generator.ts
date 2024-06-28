@@ -43,8 +43,15 @@ export function daySummary(data: types.weatherData, main: HTMLElement, location:
     smolTxt.className = 'smol';
     nonTable.appendChild(smolTxt);
 
-    const dayTitle = document.createElement('h2');
-    dayTitle.innerHTML = dataTime.format('ddd, YYYY-MM-DD');
+    const dayTitle = document.createElement('h3');
+    dayTitle.innerHTML = `Local time is ${moment().utcOffset(Math.floor(data.utc_offset_seconds / 60))
+        .format("ddd, DD MMM YYYY HH:mm:ss Z")}\n`;
+    //live update cur time
+    setInterval(async () => {
+        const localTime = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60))
+            .format("ddd, DD MMM YYYY HH:mm:ss Z");
+        dayTitle.innerHTML = `Local time is ${localTime}\n`;
+    }, testData.clockDelay);
     nonTable.appendChild(dayTitle);
 
     main.appendChild(nonTable);
@@ -69,36 +76,17 @@ export function dayInfo(data: types.weatherData, main: HTMLElement, dataTime: mo
     summaryTable.id = 'summaryTable';
     summaryTable.insertRow();
     // const summaryTableImg = summaryTable.rows[0].insertCell(); //img
-    const summaryTableTemp = summaryTable.rows[0].insertCell(); // temp
     const summaryTableInfo = summaryTable.rows[0].insertCell(); // info
+    const summaryTableTemp = summaryTable.rows[0].insertCell(); // temp
     summaryTable.insertRow();
-    const summaryTableWind = summaryTable.rows[1].insertCell(); // wind
     const summaryTableRainSpot = summaryTable.rows[1].insertCell();
+    const summaryTableWind = summaryTable.rows[1].insertCell(); // wind
 
-    const summaryTableRain = document.createElement('table');
-    summaryTableRain.insertRow();
-    const summaryTableRainPer = summaryTableRain.rows[0].insertCell(); // rain %
-    const summaryTableRainPerTable = summaryTableRain.rows[0].insertCell(); // rain % table
-    summaryTableRain.insertRow();
-    const summaryTableRainOther = summaryTableRain.rows[1].insertCell(); // other rain
-    summaryTableRainOther.colSpan = 2;
-
-    today.is_day == 0 ? '🌒' : '☀';
-    const curweather = func.weatherCodeToString(daily.weathercode![todayIndex] ?? today.weathercode ?? 0);
-
-    //live update cur time
-    setInterval(async () => {
-        const localTime = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60))
-            .format("ddd, DD MMM YYYY HH:mm:ss Z");
-        summaryTableInfo.innerHTML =
-            `Local time is ${localTime}
-It is currently ${today.is_day == 0 ? 'night' : 'day'}.
-${curweather.icon} ${curweather.string}.
-`;
-    }, 250);
+    const weatherImg = document.createElement('img');
+    weatherImg.src = './weatherState/' + (daily.weathercode![todayIndex] ?? today.weathercode ?? 0) + '.png';
+    summaryTableInfo.appendChild(weatherImg);
 
     document.body.style.backgroundImage = 'linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ),' + `url(./backgrounds/${daily.weathercode![todayIndex] ?? 0}.png)`;
-
     const temp = {
         cur: today.temperature,
         min: daily.temperature_2m_min![todayIndex],
@@ -126,29 +114,28 @@ Min <span id="spanMin">${temp.min}</span>°C`;
     rainTable.insertRow();
     for (let i = 0; i < 10; i++) {
         rainTable.rows[0].insertCell();
-        if (i <= Math.round(rain.chance / 10)) {
+        if (i < Math.round(rain.chance / 10)) {
             rainTable.rows[0].cells[i].style.backgroundColor = '#00FF00';
         } else {
             rainTable.rows[0].cells[i].style.backgroundColor = '#3c3c3c';
         }
     }
-    summaryTableRainPer.innerHTML = `Chance of rain: <span id="spanCur">${rain.chance}%</span>`;
-    summaryTableRainPerTable.appendChild(rainTable);
+    summaryTableRainSpot.innerHTML = `Chance of rain: <span id="spanCur">${rain.chance}%</span>`;
+    summaryTableRainSpot.appendChild(rainTable);
     if (rain.rain > 0) {
-        summaryTableRainOther.innerHTML += `Possible rain: <span id="rainfall">${rain.rain}mm</span></br>`;
+        summaryTableRainSpot.innerHTML += `Possible rain: <span id="rainfall">${rain.rain}mm</span></br>`;
     }
     if (rain.showers > 0) {
-        summaryTableRainOther.innerHTML += `Possible showers: <span id="showers">${rain.showers}mm</span></br>`;
+        summaryTableRainSpot.innerHTML += `Possible showers: <span id="showers">${rain.showers}mm</span></br>`;
     }
     if (rain.snow > 0) {
-        summaryTableRainOther.innerHTML += `Possible snow: <span id="snowfall">${rain.snow}cm</span></br>`;
+        summaryTableRainSpot.innerHTML += `Possible snow: <span id="snowfall">${rain.snow}cm</span></br>`;
     }
 
     summaryTableWind.innerHTML = `Cur <span id="spanCur">${wind.cur}</span>km/h ${wind.dir.emoji}${wind.dir.short}
 Max winds: <span id="spanMax">${wind.max}</span>km/h
 Max gusts: <span id="spanMax">${wind.maxGust}</span>km/h
 `;
-    summaryTableRainSpot.appendChild(summaryTableRain);
     summary.appendChild(summaryTable);
     main.appendChild(summary);
 }
@@ -401,7 +388,7 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
         const sunrise = moment(data.daily?.sunrise![Math.floor(i / 24)]);
         const sunset = moment(data.daily?.sunset![Math.floor(i / 24)]);
 
-        
+
         const weatherCode: number = hourly.weathercode?.[i] ?? hourly.weather_code?.[i] ?? 0;
         // weatherRow.cells[pos].innerHTML = func.weatherCodeToString(weatherCode).icon;
         const weatherImg = document.createElement('img');
@@ -431,7 +418,7 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
             timeRow.cells[pos].style.backgroundColor = '#FFD800' + testData.transparencyHex;
             // timeRow.cells[pos].style.color = '#000000';
         } else {
-            console.log('eee')
+            console.log('eee');
             timeRow.cells[pos].style.backgroundColor = '#510077' + testData.transparencyHex;
             // timeRow.cells[pos].style.color = '#FFFFFF';
         }

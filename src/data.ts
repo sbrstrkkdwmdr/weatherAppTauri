@@ -1,10 +1,12 @@
 import * as types from './types';
 
-export const test:boolean = false; // true = use test data, false = use API
+export const test:boolean = true; // true = use test data, false = use API
 
 export const transparencyHex = '55';
 
 export const zeroColour = '#00000000';
+
+export const clockDelay = 100; //time between clock ticks
 
 export const weather: types.weatherData = {
     "latitude": 51.5,

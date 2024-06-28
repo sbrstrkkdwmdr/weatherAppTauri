@@ -1,7 +1,13 @@
 #mapContainer {
     right: 10px;
+    top: 85px;
     position: absolute;
     border-radius: 15px;
+    z-index: 0;
+}
+
+#mapContainer:hover {
+    z-index: 999;
 }
 
 #map {
@@ -10,9 +16,12 @@
     border-radius: 15px;
     overflow: hidden;
     transition: ease-in-out 1500ms;
+    z-index: 0;
 }
 
 #map:hover {
     width: 35vw;
     height: 50vh;
+    z-index: 99;
+    transition: ease-in-out 1500ms;
 }
