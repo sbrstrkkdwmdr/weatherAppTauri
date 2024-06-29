@@ -11,6 +11,9 @@
 
 ## WIP
 
+### Fixes
+- map displayed above titlebar
+
 ## [0.1.0] - 2024-06-29
 
 ### Changes

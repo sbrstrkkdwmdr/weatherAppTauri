@@ -1,5 +1,5 @@
 .titlebar {
-    height:30px;
+    height: 30px;
     background: #343f3f66;
     user-select: none;
     display: flex;
@@ -8,6 +8,7 @@
     top: 0;
     left: 0;
     right: 0;
+    z-index: 999; 
 }
 
 .titlebarButton {
