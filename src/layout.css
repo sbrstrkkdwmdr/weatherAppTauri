@@ -1,0 +1,379 @@
+@font-face {
+    font-family: 'Oxanium';
+    src: url('./assets/OxaniumMedium-VGG8V.ttf');
+}
+
+* {
+    scrollbar-color: #6a8383 #343f3f;
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+    font-family: 'Oxanium';
+}
+
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(../public/backgrounds/0.png);
+    color: white;
+    /* overflow-y: hidden; */
+    /* overflow-x: hidden; */
+}
+
+/* search area */
+
+#searchQuery {
+    top: 5px;
+    position: absolute;
+    border-radius: 20px;
+    width: 35%;
+    background-color: #252525;
+    height: 45px;
+    padding-left: 5px;
+}
+
+#searchQuery #searchBar {
+    position: relative;
+    float: left;
+    width: calc(100% - 45px);
+    height: 35px;
+    border-color: #00000000;
+    background-color: #00000000;
+    color: #cacaca;
+    font-size: large;
+    top: 3px;
+}
+
+input
+
+/* select:focus, */
+/* textarea:focus, */
+/* button:focus */
+    {
+    outline: none;
+}
+
+#searchButton {
+    position: sticky;
+    width: 45px;
+    height: 45px;
+    float: right;
+    background-color: #00000000;
+    border-color: #00000000;
+    border-left-color: #f0f0f0;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    top: 0px;
+}
+
+#searchButton:hover {
+    background-color: #ffffff99;
+}
+
+#searchButton img {
+    width: 25px;
+    height: 25px;
+}
+
+/* search bar results */
+
+#searchSuggest {
+    max-width: 100%;
+    z-index: 6;
+    display: grid;
+    position: absolute;
+    grid-template-columns: minmax(100px, 100%);
+    max-height: 500px;
+    top: 50px;
+    overflow: auto;
+    background: #353535;
+    border-radius: 10px;
+    transition: ease-in-out 500ms;
+    overflow: auto;
+    position: absolute
+}
+
+.result {
+    color: #17ebeb;
+    border-radius: 5px;
+    padding: 3px;
+}
+
+
+.result:nth-of-type(odd) {
+    background: #35353544;
+}
+
+.result:nth-of-type(even) {
+    background: #14141444;
+}
+
+.result:hover {
+    color: #15ff00;
+    background: #4a5749;
+}
+
+/* content */
+
+#mainContent {
+    margin-top: 50px;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+    text-align: center;
+}
+
+table {
+    padding: none;
+    border: none;
+    border-spacing: 0;
+}
+
+#contentHeading h2,
+#contentHeading p {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    align-tracks: center;
+}
+
+#contentHeading {
+    width: max-content;
+    text-align: center;
+    margin: auto;
+}
+
+.smol {
+    font-size: xx-small;
+    width: max-content;
+    margin: auto;
+}
+
+/* cur day */
+
+#summaryTable {
+    /* border: 1px solid black; */
+    border-spacing: 1px;
+    border-radius: 15px;
+    margin: auto;
+}
+
+/* #summaryDiv {} */
+
+
+#summaryTable td {
+    width: fit-content;
+    white-space: pre;
+    /* border: 1px dotted black; */
+    vertical-align: top;
+    font-size: 18px;
+    padding:5px;
+    text-align: center;
+}
+
+#summaryTable>tbody>tr>td{
+    padding-left: 35px;
+    padding-right: 35px;
+}
+
+#summaryTable img {
+    height: auto;
+    width: 75px;
+}
+
+#summaryTable td:nth-child(1) {
+    text-align: right;
+}
+
+#summaryTable td:nth-child(2) {
+    text-align: left;
+}
+
+/* #summaryTable >tbody>tr>td {
+    background-color: #00000066;
+    border-radius: 15px;
+} */
+
+#rainPercent tr {
+    height: 21px;
+    max-height: 21px;
+}
+
+#rainPercent td {
+    width: 5px;
+    border: 1px solid black;
+}
+
+/* #rainPercent {
+} */
+
+#spanMax {
+    color: #f16969;
+}
+
+#spanMin {
+    color: #69b0f1;
+}
+
+#spanCur {
+    color: #76e060;
+}
+
+#spanRain {
+    color: #69b0f1;
+}
+
+#spanSnow {
+    color: #b6cef1;
+
+}
+
+
+
+/* hourly data */
+
+#dailyTable {
+    margin: auto;
+    border-spacing: 0;
+    min-width: 400px;
+}
+
+#dailyTable td {
+    vertical-align: top;
+}
+
+#dailyTable tr {
+    height: 21px;
+    max-height: 21px;
+}
+
+#weeklyTable {
+    border-spacing: 0;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#weeklyTable td {
+    vertical-align: top;
+}
+
+#weeklyTable tr {
+    height: 21px;
+    max-height: 21px;
+}
+
+#contentWeek {
+    display: inline-block;
+    width: max-content;
+    margin: auto;
+}
+
+#tableLabel {
+    /* background-color: #1f1f1f; */
+    color: #747474;
+    table-layout: fixed;
+}
+
+#tableLabel td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: right;
+}
+
+#tableLabel td:first-child {
+    color: #ffffff;
+}
+
+#tableLabel tr {
+    height: 21px;
+    max-height: 21px;
+}
+
+#tableData {
+    /* background-color: #1f1f1f; */
+    color: #ffffff;
+}
+
+.weatherRow,
+.dayRow {
+    color: #cfcfcf;
+}
+
+#tableData td {
+    text-align: center;
+    padding-left: 5px;
+    padding-right: 5px;
+    mix-blend-mode: difference;
+}
+
+#tableData img {
+    width: 25px;
+    height: auto;
+}
+
+#tableDiv {
+    min-width: 400px;
+    max-width: 65vw;
+    overflow: auto;
+}
+
+/* carousel */
+.carousel {
+    scroll-snap-type: x mandatory;
+    display: flex;
+    width: 500px;
+    justify-content: center;
+    margin: auto;
+}
+
+.carouselItem {
+    scroll-snap-align: center;
+    padding: 5px;
+    width: 90px;
+    min-width: 90px;
+    height: 90px;
+    margin: 10px;
+    background-color: #00000066;
+    border-radius: 15px;
+    justify-content: center;
+}
+
+.carouselItem:hover {
+    background-color: #005E5988;
+}
+
+.carouselSelected {
+    background-color: #00601188;
+}
+
+.carouselSelected:hover {
+    background-color: #003A5988;
+}
+
+.carouselItem h3 {
+    margin: 0;
+    font-size: 14px;
+}
+
+.carouselItem img {
+    margin-top: 2px;
+    width: 25px;
+    height: auto;
+    float: left;
+}
+
+.carouselTemp {
+    margin-top: 0;
+    float: right;
+    right: 0;
+    white-space: pre;
+    font-size: 11.5px;
+}
+
+.carouselWeather {
+    text-align: center;
+    margin-top: 35px;
+    margin-left: auto;
+    margin-right: auto;
+    width: min-content;
+    white-space: pre;
+    font-size: 12px;
+}
