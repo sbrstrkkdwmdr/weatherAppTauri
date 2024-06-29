@@ -21,6 +21,34 @@ try {
         .then(x => {
             console.log('set min size');
         });
+    window.appWindow.maximize();
+    setMaximiseButtonImg();
+    const minimiseButton = document
+        .getElementById('titlebarMinimize');
+    minimiseButton
+        .addEventListener('click', () => window.appWindow.minimize());
+    const maximiseButton = document
+        .getElementById('titlebarMaximize');
+    maximiseButton
+        .addEventListener('click', () => {
+            window.appWindow.toggleMaximize();
+            // setMaximiseButtonImg();
+        });
+    const closeButton =
+        document
+            .getElementById('titlebarClose');
+    closeButton
+        .addEventListener('click', () => window.appWindow.close());
+
+    async function setMaximiseButtonImg() {
+        (document.getElementById('maximiseImg') as HTMLImageElement).src =
+            await window.appWindow.isMaximized() ?
+                './titlebar/maximise_in.png' :
+                './titlebar/maximise_out.png';
+    }
+    window.getCurrent().onResized(() => {
+        setMaximiseButtonImg();
+    });
 } catch (err) { }
 
 
