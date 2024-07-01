@@ -1,3 +1,5 @@
+import * as fs from '@tauri-apps/api/fs';
+import * as tpath from '@tauri-apps/api/path';
 import * as chartjs from 'chart.js';
 import moment from 'moment';
 import * as testData from './data';
@@ -86,7 +88,9 @@ export function dayInfo(data: types.weatherData, main: HTMLElement, dataTime: mo
     weatherImg.src = './weatherState/' + (daily.weathercode![todayIndex] ?? today.weathercode ?? 0) + '.png';
     summaryTableInfo.appendChild(weatherImg);
 
-    document.body.style.backgroundImage = 'linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ),' + `url(./backgrounds/${daily.weathercode![todayIndex] ?? 0}.png)`;
+    document.body.style.backgroundImage =
+        'linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ),' + `url(./backgrounds/${func.weatherToBackground(daily.weathercode![todayIndex] ?? 0)})`;
+
     const temp = {
         cur: today.temperature,
         min: daily.temperature_2m_min![todayIndex],
@@ -249,12 +253,6 @@ export function dayRow(data: types.weatherData, main: HTMLElement, dataTime: mom
         }, 100);
         pos++;
     }
-    blendCells(timeRow);
-    blendCells(tempRow);
-    blendCells(precipRow);
-    blendCells(preChRow);
-    blendCells(windRow);
-    blendCells(gustRow);
 
     const labelTable = document.createElement('table');
     labelTable.id = 'tableLabel';
@@ -282,6 +280,13 @@ export function dayRow(data: types.weatherData, main: HTMLElement, dataTime: mom
     dataContainer.appendChild(table);
     dailyTable.rows[0].insertCell().appendChild(dataContainer);
     main.appendChild(dailyTable);
+
+    blendCells(timeRow);
+    blendCells(tempRow);
+    blendCells(precipRow);
+    blendCells(preChRow);
+    blendCells(windRow);
+    blendCells(gustRow);
 }
 
 
@@ -464,13 +469,6 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
             }
         }, 100);
     }
-    blendCells(timeRow);
-    blendCells(tempRow);
-    blendCells(precipRow);
-    blendCells(preChRow);
-    blendCells(windRow);
-    blendCells(gustRow);
-
     const labelTable = document.createElement('table');
     labelTable.id = 'tableLabel';
     labelTable.insertRow().insertCell(0).innerHTML = 'Day';
@@ -499,6 +497,12 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
     dataContainer.appendChild(table);
     weeklyTable.rows[0].insertCell().appendChild(dataContainer);
     main.appendChild(weeklyTable);
+    blendCells(timeRow);
+    blendCells(tempRow);
+    blendCells(precipRow);
+    blendCells(preChRow);
+    blendCells(windRow);
+    blendCells(gustRow);
 }
 
 /**
@@ -619,18 +623,23 @@ function cellColour(cell: HTMLTableCellElement, value: number, type: 'wind' | 't
  * blend all backgrounds together
  */
 function blendCells(row: HTMLTableRowElement, start?: number, end?: number) {
-    const grads = [row.cells[0].style.backgroundColor];
+    const grads = [row.cells[0].style.backgroundColor + ' 10px'];
+    for (let i = 1; i < row.cells.length; i++) {
+        if (i == row.cells.length - 1) break;
+        grads.push(row.cells[i].style.backgroundColor);
+    }
     for (const cell of row.cells) {
         grads.push(cell.style.backgroundColor);
-        grads.push(cell.style.backgroundColor);
     }
-    grads.push(row.cells[row.cells.length - 1].style.backgroundColor);
+    grads.push(row.cells[row.cells.length - 1].style.backgroundColor + ` ${row.scrollWidth - 10}px`);
 
     for (const cell of row.cells) {
         if (!cell.className.includes('ignore')) {
             cell.style.backgroundColor = '#FFFFFF00';
         }
     }
+    console.log(grads[0]);
+    console.log(grads[grads.length - 1]);
     row.style.backgroundImage = `linear-gradient(to right, ${grads.join(', ')})`;
 }
 

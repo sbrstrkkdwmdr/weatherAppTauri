@@ -4,7 +4,6 @@
 
 - edit font 
 - using map to select shows location name
-- get proper background images
 - option to switch between current day and weekly graph
 - show air quality, pressure, visibility, humidity
 - make graphs collapsable
@@ -13,6 +12,9 @@
 
 ### Fixes
 - map displayed above titlebar
+
+### Changes
+- show random background based on weather
 
 ## [0.1.0] - 2024-06-29
 

@@ -47,3 +47,4 @@ https://github.com/sbrstrkkdwmdr/weatherAppTauri/blob/master/changelog.md
 | --- | --- |
 | [Open-Meteo](https://open-meteo.com/) | Weather API |
 | [OpenLayers](https://openlayers.org/) | Map API |
+| [pixabay](https://pixabay.com/) | Background images |

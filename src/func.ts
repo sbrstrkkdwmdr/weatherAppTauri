@@ -269,3 +269,44 @@ export function formatCoords(data: types.geoLocale | types.mapLocation): string 
     }
     return `(${Math.abs(data.latitude)?.toFixed(3) + latSide}, ${Math.abs(data.longitude)?.toFixed(3) + lonSide})`;
 }
+
+export function weatherToBackground(code: number) {
+    let string = 'clear';
+    //manually inputting this cos i cba figuring out how paths work in tauri
+    //btw length is amt of images available
+    let length = 1;
+    switch (code) {
+        case 0: default:
+            string = 'clear';
+            length = 2;
+            break;
+        case 1: case 2:
+            string = 'cloudy';
+            length = 13;
+            break;
+        case 3:
+            string = 'cloudy-overcast';
+            length = 11;
+            break;
+        case 45: case 48:
+            string = 'fog';
+            length = 9;
+            break;
+        case 51: case 56: case 61: case 66: case 80:
+        case 53: case 63: case 81:
+        case 55: case 57: case 65: case 67: case 82:
+            string = 'rain';
+            length = 9;
+            break;
+        case 71: case 73: case 75: case 77: case 85: case 86:
+            string = 'snow';
+            length = 11;
+            break;
+        case 95: case 96: case 99:
+            string = 'thunderstorm';
+            length = 14;
+            break;
+    }
+    const dirPath = './' + string + '/';
+    return dirPath + Math.floor(Math.random() * length) + '.jpg';
+}
