@@ -18,9 +18,10 @@
                 "open": true
             },
             "fs": {
-                "readFile": true,
-                "writeFile": true,
-                "exists": true
+                "all": true
+            },
+            "path": {
+                "all": true
             },
             "window": {
                 "all": true

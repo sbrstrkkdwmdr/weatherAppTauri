@@ -164,11 +164,11 @@ table {
     /* border: 1px dotted black; */
     vertical-align: top;
     font-size: 18px;
-    padding:5px;
+    padding: 5px;
     text-align: center;
 }
 
-#summaryTable>tbody>tr>td{
+#summaryTable>tbody>tr>td {
     padding-left: 35px;
     padding-right: 35px;
 }
@@ -283,8 +283,8 @@ table {
 }
 
 #tableLabel tr {
-    height: 21px;
-    max-height: 21px;
+    height: 38px;
+    max-height: 38px;
 }
 
 #tableData {
@@ -302,6 +302,10 @@ table {
     padding-left: 5px;
     padding-right: 5px;
     mix-blend-mode: difference;
+}
+
+#tableData tr {
+    height: 38px;
 }
 
 #tableData img {
