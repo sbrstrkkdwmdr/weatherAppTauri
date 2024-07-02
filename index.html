@@ -13,24 +13,19 @@
 </head>
 
 <body>
+    <div id="backgroundTemp" class="bgImg"></div>
+    <div id="background" class="bgImg"></div>
     <div data-tauri-drag-region class="titlebar">
         <div class="titlebarButton" id="titlebarMinimize">
-          <img
-            src="./public/titlebar/minimise.png"
-            alt="minimise"
-          />
+            <img src="./public/titlebar/minimise.png" alt="minimise" />
         </div>
         <div class="titlebarButton" id="titlebarMaximize">
-          <img
-            src="./public/titlebar/maximise_in.png"
-            alt="maximise"
-            id="maximiseImg"
-          />
+            <img src="./public/titlebar/maximise_in.png" alt="maximise" id="maximiseImg" />
         </div>
         <div class="titlebarButton" id="titlebarClose">
-          <img src="./public/titlebar/close.png" alt="close" />
+            <img src="./public/titlebar/close.png" alt="close" />
         </div>
-      </div>
+    </div>
 
     <div id="searchQuery">
         <input type="search" id="searchBar" class="searchChildren" placeholder="Search...">
@@ -42,12 +37,21 @@
     <div id="mapContainer">
         <div id="map" class="map" tabindex="0"> </div>
     </div>
-
     <div id="mainContent">
         <h1 id="title">It is currently DAY YYYY-MM-SS HH:MM:SS</h1>
         <h2 id="errmsg"></h2>
         <div id="contentDay"></div>
-        <div id="contentWeek"></div>
+        <div id="contentCarousel">
+
+        </div>
+        <div id="tabbedRows">
+            <div id="tabButtons">
+                <button id="tabRowDaily" class="tabRowClick">Daily</button>
+                <button id="tabRowWeekly" class="tabRowClick">Weekly</button>
+                <button id="tabRowFull" class="tabRowClick">Detailed</button>
+            </div>
+            <div id="tabContent"></div>
+        </div>
     </div>
 
 

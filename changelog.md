@@ -12,9 +12,12 @@
 
 ### Fixes
 - map displayed above titlebar
+- content covered by titlebar
+- weather icon row too short
 
 ### Changes
 - show random background based on weather
+- blur backgrounds
 
 ## [0.1.0] - 2024-06-29
 

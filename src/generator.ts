@@ -58,8 +58,6 @@ export function daySummary(data: types.weatherData, main: HTMLElement, location:
 
     main.appendChild(nonTable);
     dayInfo(data, nonTable, dataTime);
-    dayRow(data, main, dataTime);
-
 }
 
 /**
@@ -88,8 +86,13 @@ export function dayInfo(data: types.weatherData, main: HTMLElement, dataTime: mo
     weatherImg.src = './weatherState/' + (daily.weathercode![todayIndex] ?? today.weathercode ?? 0) + '.png';
     summaryTableInfo.appendChild(weatherImg);
 
-    document.body.style.backgroundImage =
-        'linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ),' + `url(./backgrounds/${func.weatherToBackground(daily.weathercode![todayIndex] ?? 0)})`;
+    const bgurl = `url(./backgrounds/${func.weatherToBackground(daily.weathercode![todayIndex] ?? 0)})`
+    document.getElementById('background').style.backgroundImage =
+        'linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ),' + bgurl;
+    setTimeout(() => {
+        document.getElementById('backgroundTemp').style.backgroundImage =
+        'linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ),' + bgurl;
+    }, 500);
 
     const temp = {
         cur: today.temperature,
@@ -145,6 +148,99 @@ Max gusts: <span id="spanMax">${wind.maxGust}</span>km/h
 }
 
 /**
+ * adds row of days to select beneath main day info
+ */
+export function dayCarousel(data: types.weatherData, main: HTMLElement, dataTime: moment.Moment, location: types.geoLocale | types.mapLocation, dayMain: HTMLElement) {
+    main.innerHTML = '';
+    const daily = data.daily!;
+    const carousel = document.createElement('div');
+    carousel.className = 'carousel';
+    for (let i = 0; i < daily.time.length; i++) {
+        const item = document.createElement('div');
+        item.className = 'carouselItem';
+        const time = moment(daily.time[i]);
+        const head = document.createElement('h3');
+        head.innerHTML = time.format("ddd, YYYY-MM-DD");
+        item.appendChild(head);
+
+        const weatherCheck = func.weatherCodeToString(daily.weather_code[i]);
+        if (weatherCheck.string !== 'Clear') {
+            const img = document.createElement('img');
+            img.src = './weatherState/' + daily.weathercode[i] + '.png';
+            item.appendChild(img);
+        }
+
+        const temperature = document.createElement('p');
+        temperature.innerHTML = `Min <span id="spanMin">${daily.temperature_2m_min[i]}</span>°C 
+Max <span id="spanMax">${daily.temperature_2m_max[i]}</span>°C`;
+        temperature.className = 'carouselTemp';
+        item.appendChild(temperature);
+
+        const weather = document.createElement('p');
+        weather.innerHTML = weatherCheck.string;
+        weather.className = 'carouselWeather';
+        item.appendChild(weather);
+
+        if (dataTime.format('YYYY-MM-DD') == time.format('YYYY-MM-DD')) {
+            item.classList.add('carouselSelected');
+        }
+
+        item.addEventListener('click', e => {
+            console.log('hello');
+            daySummary(data, dayMain, location, time);
+            for (const item of carousel.children) {
+                item.classList.remove('carouselSelected');
+            }
+            item.classList.add('carouselSelected');
+        });
+
+        carousel.appendChild(item);
+    }
+
+    main.appendChild(carousel);
+}
+
+export function tabs(data: types.weatherData, main: HTMLElement, dataTime: moment.Moment) {
+    main.innerHTML = '';
+    dayRow(data, main, dataTime);
+    weekRow(data, main, dataTime, 4);
+    weekRow(data, main, dataTime, 1);
+
+    const dailyButton = document.getElementById('tabRowDaily');
+    const weeklyButton = document.getElementById('tabRowWeekly');
+    const fullButton = document.getElementById('tabRowFull');
+    const days = document.getElementById('dailyTable');
+    const weeks = document.getElementById('weeklyTable#4');
+    const full = document.getElementById('weeklyTable#1');
+    days.style.display = '';
+    weeks.style.display = 'none';
+    full.style.display = 'none';
+    dailyButton.addEventListener('click', (e) => {
+        days.style.display = '';
+        weeks.style.display = 'none';
+        full.style.display = 'none';
+        dailyButton.classList.add('tabRowCurrent');
+        weeklyButton.classList.remove('tabRowCurrent');
+        fullButton.classList.remove('tabRowCurrent');
+    });
+    weeklyButton.addEventListener('click', (e) => {
+        days.style.display = 'none';
+        weeks.style.display = '';
+        full.style.display = 'none';
+        dailyButton.classList.remove('tabRowCurrent');
+        weeklyButton.classList.add('tabRowCurrent');
+        fullButton.classList.remove('tabRowCurrent');
+    });
+    fullButton.addEventListener('click', (e) => {
+        days.style.display = 'none';
+        weeks.style.display = 'none';
+        full.style.display = '';
+        dailyButton.classList.remove('tabRowCurrent');
+        weeklyButton.classList.remove('tabRowCurrent');
+        fullButton.classList.add('tabRowCurrent');
+    });
+}
+/**
  * generate small graph table for hourly weather info
  */
 export function dayRow(data: types.weatherData, main: HTMLElement, dataTime: moment.Moment) {
@@ -155,9 +251,11 @@ export function dayRow(data: types.weatherData, main: HTMLElement, dataTime: mom
 
     const dailyTable = document.createElement('table');
     dailyTable.id = 'dailyTable';
+    dailyTable.className = 'tabbedTable';
     const table = document.createElement('table');
     table.id = 'tableData';
-    const timeRow = table.insertRow(); // every 8th -> 0,8,16
+    const dayRow = table.insertRow();
+    const timeRow = table.insertRow();
     const weatherRow = table.insertRow();
     const tempRow = table.insertRow(); // C° | [num]
     const precipRow = table.insertRow(); // mm | [num] | blue for rain, white for snow, maybe grey 
@@ -165,6 +263,8 @@ export function dayRow(data: types.weatherData, main: HTMLElement, dataTime: mom
     const windRow = table.insertRow(); // km/h
     const gustRow = table.insertRow(); // km/h
 
+    dayRow.className = 'dayRow';
+    dayRow.style.backgroundColor = '#1f1f1f' + testData.transparencyHex;
     timeRow.className = 'timeRow';
     weatherRow.className = 'weatherRow';
     weatherRow.style.backgroundColor = '#1f1f1f' + testData.transparencyHex;
@@ -224,6 +324,11 @@ export function dayRow(data: types.weatherData, main: HTMLElement, dataTime: mom
         }
         timeRow.cells[i].innerHTML = kyou.format("HH");
 
+        if (i % 24 == 0) {
+            dayRow.insertCell().colSpan = 24;
+            dayRow.cells[i].innerHTML = kyou.format("ddd, YYYY-MM-DD");
+        }
+
         setTimeout(async () => {
             if (
                 (+dataTime.format("HH") == +kyou.format("HH")) &&
@@ -248,7 +353,7 @@ export function dayRow(data: types.weatherData, main: HTMLElement, dataTime: mom
                 windRow.cells[i].className = curtimcl;
                 gustRow.cells[i].className = curtimcl;
 
-                weatherRow.cells[i].scrollIntoView({ inline: "start" });
+                // weatherRow.cells[i].scrollIntoView({ inline: "start" });
             }
         }, 100);
         pos++;
@@ -256,6 +361,7 @@ export function dayRow(data: types.weatherData, main: HTMLElement, dataTime: mom
 
     const labelTable = document.createElement('table');
     labelTable.id = 'tableLabel';
+    labelTable.insertRow().insertCell(0).innerHTML = 'Day';
     labelTable.insertRow().insertCell(0).innerHTML = 'Time';
     labelTable.insertRow().insertCell(0).innerHTML = 'Weather';
     labelTable.insertRow().insertCell(0).innerHTML = 'Temp.';
@@ -264,13 +370,15 @@ export function dayRow(data: types.weatherData, main: HTMLElement, dataTime: mom
     labelTable.insertRow().insertCell(0).innerHTML = 'Wind';
     labelTable.insertRow().insertCell(0).innerHTML = 'Gust';
 
-    labelTable.rows[0].insertCell(1).innerHTML = '🕐';
-    labelTable.rows[1].insertCell(1).innerHTML = '';
-    labelTable.rows[2].insertCell(1).innerHTML = '°C';
-    labelTable.rows[3].insertCell(1).innerHTML = 'mm';
-    labelTable.rows[4].insertCell(1).innerHTML = '%';
-    labelTable.rows[5].insertCell(1).innerHTML = 'km/h';
+    labelTable.rows[0].insertCell(1).innerHTML = '';
+    labelTable.rows[1].insertCell(1).innerHTML = '🕐';
+    labelTable.rows[2].insertCell(1).innerHTML = '';
+    labelTable.rows[2].className = 'weatherRow';
+    labelTable.rows[3].insertCell(1).innerHTML = '°C';
+    labelTable.rows[4].insertCell(1).innerHTML = 'mm';
+    labelTable.rows[5].insertCell(1).innerHTML = '%';
     labelTable.rows[6].insertCell(1).innerHTML = 'km/h';
+    labelTable.rows[7].insertCell(1).innerHTML = 'km/h';
     // highlight current point in time
 
     dailyTable.insertRow();
@@ -289,76 +397,17 @@ export function dayRow(data: types.weatherData, main: HTMLElement, dataTime: mom
     blendCells(gustRow);
 }
 
-
-export function week(data: types.weatherData, main: HTMLElement, location: types.geoLocale | types.mapLocation, dayMain: HTMLElement, dataTime: moment.Moment) {
-    main.innerHTML = '';
-
-    dayCarousel(data, main, dataTime, location, dayMain);
-    weekRow(data, main, dataTime);
-}
-
-/**
- * adds row of days to select beneath main day info
- */
-export function dayCarousel(data: types.weatherData, main: HTMLElement, dataTime: moment.Moment, location: types.geoLocale | types.mapLocation, dayMain: HTMLElement) {
-    const daily = data.daily!;
-    const carousel = document.createElement('div');
-    carousel.className = 'carousel';
-    for (let i = 0; i < daily.time.length; i++) {
-        const item = document.createElement('div');
-        item.className = 'carouselItem';
-        const time = moment(daily.time[i]);
-        const head = document.createElement('h3');
-        head.innerHTML = time.format("ddd, YYYY-MM-DD");
-        item.appendChild(head);
-
-        const weatherCheck = func.weatherCodeToString(daily.weather_code[i]);
-        if (weatherCheck.string !== 'Clear') {
-            const img = document.createElement('img');
-            img.src = './weatherState/' + daily.weathercode[i] + '.png';
-            item.appendChild(img);
-        }
-
-        const temperature = document.createElement('p');
-        temperature.innerHTML = `Min <span id="spanMin">${daily.temperature_2m_min[i]}</span>°C 
-Max <span id="spanMax">${daily.temperature_2m_max[i]}</span>°C`;
-        temperature.className = 'carouselTemp';
-        item.appendChild(temperature);
-
-        const weather = document.createElement('p');
-        weather.innerHTML = weatherCheck.string;
-        weather.className = 'carouselWeather';
-        item.appendChild(weather);
-
-        if (dataTime.format('YYYY-MM-DD') == time.format('YYYY-MM-DD')) {
-            item.classList.add('carouselSelected');
-        }
-
-        item.addEventListener('click', e => {
-            console.log('hello');
-            daySummary(data, dayMain, location, time);
-            for (const item of carousel.children) {
-                item.classList.remove('carouselSelected');
-            }
-            item.classList.add('carouselSelected');
-        });
-
-        carousel.appendChild(item);
-    }
-
-    main.appendChild(carousel);
-}
-
 /**
  * creates weather table
  */
-export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: moment.Moment) {
+export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: moment.Moment, hrSeperator: number) {
     const weeklyTable = document.createElement('table');
-    weeklyTable.id = 'weeklyTable';
+    weeklyTable.id = 'weeklyTable#' + hrSeperator;
+    weeklyTable.className = 'tabbedTable';
     const table = document.createElement('table');
     table.id = 'tableData';
-    const dayRow = table.insertRow(); // ie day yyyy-mm-dd
-    const timeRow = table.insertRow(); // every 8th -> 0,8,16
+    const dayRow = table.insertRow();
+    const timeRow = table.insertRow();
     const weatherRow = table.insertRow();
     const tempRow = table.insertRow(); // C° | [num]
     const precipRow = table.insertRow(); // mm | [num] | blue for rain, white for snow, maybe grey 
@@ -378,7 +427,6 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
     gustRow.className = 'gustRow';
 
     const hourly = data.hourly!;
-    const hrSeperator = 4; // do every x hours. make sure its factors of 8 or 24
     for (let i = 0; i < (hourly.time.length); i += hrSeperator) {
         weatherRow.insertCell();
         tempRow.insertCell();
@@ -423,7 +471,6 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
             timeRow.cells[pos].style.backgroundColor = '#FFD800' + testData.transparencyHex;
             // timeRow.cells[pos].style.color = '#000000';
         } else {
-            console.log('eee');
             timeRow.cells[pos].style.backgroundColor = '#510077' + testData.transparencyHex;
             // timeRow.cells[pos].style.color = '#FFFFFF';
         }
@@ -465,7 +512,7 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
                 windRow.cells[pos].className = curtimcl;
                 gustRow.cells[pos].className = curtimcl;
 
-                weatherRow.cells[pos].scrollIntoView({ inline: "start" });
+                // weatherRow.cells[pos].scrollIntoView({ inline: "start" });
             }
         }, 100);
     }
@@ -483,6 +530,7 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
     labelTable.rows[0].insertCell(1).innerHTML = '';
     labelTable.rows[1].insertCell(1).innerHTML = '🕐';
     labelTable.rows[2].insertCell(1).innerHTML = '';
+    labelTable.rows[2].className = 'weatherRow';
     labelTable.rows[3].insertCell(1).innerHTML = '°C';
     labelTable.rows[4].insertCell(1).innerHTML = 'mm';
     labelTable.rows[5].insertCell(1).innerHTML = '%';
@@ -638,8 +686,8 @@ function blendCells(row: HTMLTableRowElement, start?: number, end?: number) {
             cell.style.backgroundColor = '#FFFFFF00';
         }
     }
-    console.log(grads[0]);
-    console.log(grads[grads.length - 1]);
+    // console.log(grads[0]);
+    // console.log(grads[grads.length - 1]);
     row.style.backgroundImage = `linear-gradient(to right, ${grads.join(', ')})`;
 }
 

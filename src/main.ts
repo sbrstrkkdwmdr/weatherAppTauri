@@ -183,12 +183,15 @@ async function display(data: types.weatherData | string, location: types.geoLoca
         (document.getElementById('title') as HTMLHeadingElement).innerHTML = 'There was an error trying find the weather at location NaN,NaN';
     } else {
         try {
-            const dayDiv = document.getElementById('contentDay') as HTMLDivElement;
-            const weekDiv = document.getElementById('contentWeek') as HTMLDivElement;
             const rn = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60));
 
+            const dayDiv = document.getElementById('contentDay') as HTMLDivElement;
+            const carouselDiv = document.getElementById('contentCarousel') as HTMLDivElement;;
+            const tabDiv = document.getElementById('tabContent') as HTMLDivElement;
+
             generate.daySummary(data, dayDiv, location, rn);
-            generate.week(data, weekDiv, location, dayDiv, rn);
+            generate.dayCarousel(data, carouselDiv, rn, location, dayDiv);
+            generate.tabs(data, tabDiv, rn);
             errmsg.innerHTML = '';
             console.log(data);
         } catch (err) {

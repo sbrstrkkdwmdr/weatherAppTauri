@@ -11,10 +11,31 @@
 }
 
 body {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(../public/backgrounds/0.png);
     color: white;
-    /* overflow-y: hidden; */
-    /* overflow-x: hidden; */
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+#background {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../public/backgrounds/clear/0.jpg');
+    z-index: -100;
+}
+
+#backgroundTemp {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../public/backgrounds/clear/0.jpg');
+    z-index: -101;
+}
+
+.bgImg {
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+    position: absolute;
+    overflow-y: hidden;
+    overflow-x: hidden;
 }
 
 /* search area */
@@ -228,42 +249,19 @@ table {
 
 
 /* hourly data */
-
-#dailyTable {
+.tabbedTable {
     margin: auto;
     border-spacing: 0;
     min-width: 400px;
 }
 
-#dailyTable td {
-    vertical-align: top;
+.tabbedTable td {
+    vertical-align: middle;
 }
 
-#dailyTable tr {
-    height: 21px;
-    max-height: 21px;
-}
-
-#weeklyTable {
-    border-spacing: 0;
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#weeklyTable td {
-    vertical-align: top;
-}
-
-#weeklyTable tr {
-    height: 21px;
-    max-height: 21px;
-}
-
-#contentWeek {
-    display: inline-block;
-    width: max-content;
-    margin: auto;
+.tabbedTable tr {
+    min-height: 21px;
+    max-height: 32px;
 }
 
 #tableLabel {
@@ -283,18 +281,24 @@ table {
 }
 
 #tableLabel tr {
-    height: 38px;
-    max-height: 38px;
+    min-height: 21px;
+    max-height: 32px;
 }
 
 #tableData {
     /* background-color: #1f1f1f; */
     color: #ffffff;
+    width: 52vw;
+    max-width: 1000px;
 }
 
 .weatherRow,
 .dayRow {
     color: #cfcfcf;
+}
+
+.weatherRow {
+    height: 32px;
 }
 
 #tableData td {
@@ -305,7 +309,7 @@ table {
 }
 
 #tableData tr {
-    height: 38px;
+    height: 21px;
 }
 
 #tableData img {
@@ -314,9 +318,39 @@ table {
 }
 
 #tableDiv {
-    min-width: 400px;
-    max-width: 65vw;
+    width: 52vw;
+    max-width: 1000px;
     overflow: auto;
+}
+
+/* tabs */
+#tabButtons {
+    justify-content: center;
+    height: 30px;
+}
+
+.tabRowClick {
+    width: 75px;
+    height: 30px;
+    background-color: #1f1f1f55;
+    color: white;
+    border: 0;
+}
+
+.tabRowClick:hover {
+    background-color: #b0ff56e7;
+    color: black;
+}
+
+.tabRowCurrent {
+    background-color: #ffc956e7;
+    color: black;
+}
+
+#tabContent {
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
 }
 
 /* carousel */
