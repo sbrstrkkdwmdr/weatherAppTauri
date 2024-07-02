@@ -20,7 +20,7 @@ body {
 /* search area */
 
 #searchQuery {
-    top: 5px;
+    top: 35px;
     position: absolute;
     border-radius: 20px;
     width: 35%;
@@ -38,7 +38,7 @@ body {
     background-color: #00000000;
     color: #cacaca;
     font-size: large;
-    top: 3px;
+    top: 5px;
 }
 
 input
@@ -60,7 +60,7 @@ input
     border-left-color: #f0f0f0;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
-    top: 0px;
+    top: 30px;
 }
 
 #searchButton:hover {
@@ -113,7 +113,7 @@ input
 /* content */
 
 #mainContent {
-    margin-top: 50px;
+    margin-top: 90px;
     width: auto;
     margin-left: auto;
     margin-right: auto;
