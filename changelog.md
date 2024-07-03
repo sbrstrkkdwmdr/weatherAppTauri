@@ -4,8 +4,13 @@
 
 - using map to select shows location name
 - show air quality, pressure, visibility, humidity
-- fix table backgrounds being mis-aligned
 - get proper weather icons
+
+## [WIP] - xxxx-xx-xx
+
+### Fixes
+- table backgrounds being mis-aligned
+- consistent sizing on table cells
 
 ## [0.2.0] - 2024-07-03
 

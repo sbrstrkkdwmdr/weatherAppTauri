@@ -89,7 +89,7 @@ export function dayInfo(data: types.weatherData, main: HTMLElement, dataTime: mo
 
     const bgurl = `url(./backgrounds/${func.weatherToBackground(daily.weathercode![todayIndex] ?? 0)})`;
     document.getElementById('backgroundTemp').style.backgroundImage =
-    'linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ),' + bgurl;
+        'linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ),' + bgurl;
     setTimeout(() => {
         document.getElementById('background').style.backgroundImage =
             'linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ),' + bgurl;
@@ -683,10 +683,7 @@ function blendCells(row: HTMLTableRowElement, start?: number, end?: number) {
     const grads = [row.cells[0].style.backgroundColor + ' 10px'];
     for (let i = 1; i < row.cells.length; i++) {
         if (i == row.cells.length - 1) break;
-        grads.push(row.cells[i].style.backgroundColor);
-    }
-    for (const cell of row.cells) {
-        grads.push(cell.style.backgroundColor);
+        grads.push(row.cells[i].style.backgroundColor /* + '' + ((i + 1) * 10) + 'px' */);
     }
     grads.push(row.cells[row.cells.length - 1].style.backgroundColor + ` ${row.scrollWidth - 10}px`);
 
@@ -755,7 +752,7 @@ function divTab(select: HTMLElement, remove: HTMLElement[]) {
 
 function tabsScrollTo(elem: HTMLElement) {
     setTimeout(() => {
-        
+
         try {
             console.log(elem.getElementsByClassName('currentTimeCell'));
             elem.getElementsByClassName('currentTimeCell').item(0).scrollIntoView({ inline: 'start' });

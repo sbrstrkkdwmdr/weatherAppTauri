@@ -306,6 +306,7 @@ table {
     padding-left: 5px;
     padding-right: 5px;
     mix-blend-mode: difference;
+    min-width: 42px;
 }
 
 #tableData tr {
