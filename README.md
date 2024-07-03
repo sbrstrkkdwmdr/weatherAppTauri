@@ -9,9 +9,9 @@ a simple weather app developed using Vite and Tauri
 [![OpenLayers](https://img.shields.io/badge/OpenLayers-1F6B75?style=for-the-badge&logo=openlayers&logoColor=white)](https://openlayers.org/)
 </br>
 
-[![license](https://img.shields.io/github/license/sbrstrkkdwmdr/weatherAppTauri?label=license)](https://github.com/sbrstrkkdwmdr/weatherAppTauri/blob/main/LICENSE)
+[![license](https://img.shields.io/github/license/sbrstrkkdwmdr/weatherAppTauri?label=license)](https://github.com/sbrstrkkdwmdr/weatherAppTauri/blob/master/LICENSE)
 [![lastcommit](https://img.shields.io/github/last-commit/sbrstrkkdwmdr/weatherAppTauri)](https://github.com/sbrstrkkdwmdr/weatherAppTauri)
-[![changelog](https://img.shields.io/badge/Changelog-E05735)](https://github.com/sbrstrkkdwmdr/weatherAppTauri/blob/main/changelog.md)</br>
+[![changelog](https://img.shields.io/badge/Changelog-E05735)](https://github.com/sbrstrkkdwmdr/weatherAppTauri/blob/master/changelog.md)</br>
 
 ## Running the app
 
@@ -39,8 +39,6 @@ Run `npm run tbd` </br>
 The `.exe` should be in `./src-tauri/target/debug/<appname>.exe` </br>
 
 ## credits
-
-https://github.com/sbrstrkkdwmdr/weatherAppTauri/blob/master/changelog.md
 
 | Source | Usage |
 | --- | --- |
