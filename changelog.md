@@ -8,7 +8,7 @@
 - show air quality, pressure, visibility, humidity
 - make graphs collapsable
 
-## WIP
+## [0.2.0]
 
 ### Fixes
 - map displayed above titlebar
