@@ -14,10 +14,13 @@
 - map displayed above titlebar
 - content covered by titlebar
 - weather icon row too short
+- background flashing
 
 ### Changes
 - show random background based on weather
 - blur backgrounds
+- move the weather table into tabs
+- opaque title bar
 
 ## [0.1.0] - 2024-06-29
 

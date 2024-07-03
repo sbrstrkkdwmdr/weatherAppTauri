@@ -19,6 +19,8 @@ body {
 #background {
     background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../public/backgrounds/clear/0.jpg');
     z-index: -100;
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
 }
 
 #backgroundTemp {
@@ -31,8 +33,6 @@ body {
     left: 0;
     height: 100vh;
     width: 100vw;
-    filter: blur(5px);
-    -webkit-filter: blur(5px);
     position: absolute;
     overflow-y: hidden;
     overflow-x: hidden;

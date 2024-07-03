@@ -6,7 +6,7 @@ import * as testData from './data';
 import * as func from './func';
 import * as types from './types';
 
-export function daySummary(data: types.weatherData, main: HTMLElement, location: types.geoLocale | types.mapLocation, dataTime: moment.Moment) {
+export function daySummary(data: types.weatherData, main: HTMLElement, location: types.geoLocale | types.mapLocation, dataTime: moment.Moment, tabMain: HTMLElement) {
     const rn = moment();
     main.innerHTML = '';
     const today = data.current_weather!;
@@ -58,6 +58,7 @@ export function daySummary(data: types.weatherData, main: HTMLElement, location:
 
     main.appendChild(nonTable);
     dayInfo(data, nonTable, dataTime);
+    tabs(data, tabMain, dataTime);
 }
 
 /**
@@ -86,13 +87,13 @@ export function dayInfo(data: types.weatherData, main: HTMLElement, dataTime: mo
     weatherImg.src = './weatherState/' + (daily.weathercode![todayIndex] ?? today.weathercode ?? 0) + '.png';
     summaryTableInfo.appendChild(weatherImg);
 
-    const bgurl = `url(./backgrounds/${func.weatherToBackground(daily.weathercode![todayIndex] ?? 0)})`
-    document.getElementById('background').style.backgroundImage =
-        'linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ),' + bgurl;
+    const bgurl = `url(./backgrounds/${func.weatherToBackground(daily.weathercode![todayIndex] ?? 0)})`;
+    document.getElementById('backgroundTemp').style.backgroundImage =
+    'linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ),' + bgurl;
     setTimeout(() => {
-        document.getElementById('backgroundTemp').style.backgroundImage =
-        'linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ),' + bgurl;
-    }, 500);
+        document.getElementById('background').style.backgroundImage =
+            'linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ),' + bgurl;
+    }, 50);
 
     const temp = {
         cur: today.temperature,
@@ -150,7 +151,7 @@ Max gusts: <span id="spanMax">${wind.maxGust}</span>km/h
 /**
  * adds row of days to select beneath main day info
  */
-export function dayCarousel(data: types.weatherData, main: HTMLElement, dataTime: moment.Moment, location: types.geoLocale | types.mapLocation, dayMain: HTMLElement) {
+export function dayCarousel(data: types.weatherData, main: HTMLElement, dataTime: moment.Moment, location: types.geoLocale | types.mapLocation, dayMain: HTMLElement, tabMain: HTMLElement) {
     main.innerHTML = '';
     const daily = data.daily!;
     const carousel = document.createElement('div');
@@ -187,7 +188,7 @@ Max <span id="spanMax">${daily.temperature_2m_max[i]}</span>°C`;
 
         item.addEventListener('click', e => {
             console.log('hello');
-            daySummary(data, dayMain, location, time);
+            daySummary(data, dayMain, location, time, tabMain);
             for (const item of carousel.children) {
                 item.classList.remove('carouselSelected');
             }
@@ -201,6 +202,9 @@ Max <span id="spanMax">${daily.temperature_2m_max[i]}</span>°C`;
 }
 
 export function tabs(data: types.weatherData, main: HTMLElement, dataTime: moment.Moment) {
+    document.getElementById('tabButtons')
+        .style.display = '';
+
     main.innerHTML = '';
     dayRow(data, main, dataTime);
     weekRow(data, main, dataTime, 4);
@@ -215,29 +219,34 @@ export function tabs(data: types.weatherData, main: HTMLElement, dataTime: momen
     days.style.display = '';
     weeks.style.display = 'none';
     full.style.display = 'none';
+    if (dailyButton.classList.contains('tabRowCurrent')) {
+        selectClassTab(dailyButton, [weeklyButton, fullButton], 'tabRowCurrent');
+        divTab(days, [weeks, full]);
+        tabsScrollTo(days);
+
+    } else if (weeklyButton.classList.contains('tabRowCurrent')) {
+        selectClassTab(weeklyButton, [dailyButton, fullButton], 'tabRowCurrent');
+        divTab(weeks, [days, full]);
+        tabsScrollTo(weeks);
+    } else {
+        selectClassTab(fullButton, [dailyButton, weeklyButton], 'tabRowCurrent');
+        divTab(full, [days, weeks]);
+        tabsScrollTo(full);
+    }
     dailyButton.addEventListener('click', (e) => {
-        days.style.display = '';
-        weeks.style.display = 'none';
-        full.style.display = 'none';
-        dailyButton.classList.add('tabRowCurrent');
-        weeklyButton.classList.remove('tabRowCurrent');
-        fullButton.classList.remove('tabRowCurrent');
+        selectClassTab(dailyButton, [weeklyButton, fullButton], 'tabRowCurrent');
+        divTab(days, [weeks, full]);
+        tabsScrollTo(days);
     });
     weeklyButton.addEventListener('click', (e) => {
-        days.style.display = 'none';
-        weeks.style.display = '';
-        full.style.display = 'none';
-        dailyButton.classList.remove('tabRowCurrent');
-        weeklyButton.classList.add('tabRowCurrent');
-        fullButton.classList.remove('tabRowCurrent');
+        selectClassTab(weeklyButton, [dailyButton, fullButton], 'tabRowCurrent');
+        divTab(weeks, [days, full]);
+        tabsScrollTo(weeks);
     });
     fullButton.addEventListener('click', (e) => {
-        days.style.display = 'none';
-        weeks.style.display = 'none';
-        full.style.display = '';
-        dailyButton.classList.remove('tabRowCurrent');
-        weeklyButton.classList.remove('tabRowCurrent');
-        fullButton.classList.add('tabRowCurrent');
+        selectClassTab(fullButton, [dailyButton, weeklyButton], 'tabRowCurrent');
+        divTab(full, [days, weeks]);
+        tabsScrollTo(full);
     });
 }
 /**
@@ -720,4 +729,38 @@ function averageData(data: number[], position: number, range: number) {
         }
         return (arr.reduce((a, b) => b + a, 0) / range).toFixed(1);
     }
+}
+
+/**
+ * used for tab buttons.
+ * highlight the selected tab button and un-highlight the others
+ */
+function selectClassTab(select: HTMLElement, remove: HTMLElement[], className: string) {
+    select.classList.add(className);
+    for (const elem of remove) {
+        elem.classList.remove(className);
+    }
+}
+
+/**
+ * used for switching content
+ * show selected div and hide the others
+ */
+function divTab(select: HTMLElement, remove: HTMLElement[]) {
+    select.style.display = '';
+    for (const elem of remove) {
+        elem.style.display = 'none';
+    }
+}
+
+function tabsScrollTo(elem: HTMLElement) {
+    setTimeout(() => {
+        
+        try {
+            console.log(elem.getElementsByClassName('currentTimeCell'));
+            elem.getElementsByClassName('currentTimeCell').item(0).scrollIntoView({ inline: 'start' });
+        } catch (err) {
+            console.log(err);
+        }
+    }, 500);
 }

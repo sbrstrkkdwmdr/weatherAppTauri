@@ -189,8 +189,8 @@ async function display(data: types.weatherData | string, location: types.geoLoca
             const carouselDiv = document.getElementById('contentCarousel') as HTMLDivElement;;
             const tabDiv = document.getElementById('tabContent') as HTMLDivElement;
 
-            generate.daySummary(data, dayDiv, location, rn);
-            generate.dayCarousel(data, carouselDiv, rn, location, dayDiv);
+            generate.daySummary(data, dayDiv, location, rn, tabDiv);
+            generate.dayCarousel(data, carouselDiv, rn, location, dayDiv, tabDiv);
             generate.tabs(data, tabDiv, rn);
             errmsg.innerHTML = '';
             console.log(data);
