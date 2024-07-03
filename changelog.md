@@ -2,13 +2,12 @@
 
 ## to do list
 
-- edit font 
 - using map to select shows location name
-- option to switch between current day and weekly graph
 - show air quality, pressure, visibility, humidity
-- make graphs collapsable
+- fix table backgrounds being mis-aligned
+- get proper weather icons
 
-## [0.2.0]
+## [0.2.0] - 2024-07-03
 
 ### Fixes
 - map displayed above titlebar
