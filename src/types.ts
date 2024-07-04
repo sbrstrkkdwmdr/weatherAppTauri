@@ -24,8 +24,8 @@ export type geoLocale = {
 export type mapLocation = {
     latitude: number,
     longitude: number,
-    name: string, 
-}
+    name: string,
+};
 
 export type geoResults = { results: geoLocale[]; generationtime_ms: number, };
 
@@ -46,6 +46,7 @@ export type weatherData = {
         is_day: number,
         time: string;
         interval: number;
+        apparent_temperature?: string;
     };
     current_weather_units?: {
         temperature: string,
@@ -55,7 +56,8 @@ export type weatherData = {
         is_day: string,
         time: string;
         interval: string;
-    }
+        apparent_temperature?: number;
+    };
     hourly?: weatherDataTypesHourly,
     hourly_units?: weatherDataUnitsHourly,
     daily?: weatherDataTypesDaily,
@@ -80,10 +82,10 @@ type weatherDataTypesHourly = {
     windspeed_80m?: number[],
     windspeed_120m?: number[],
     windspeed_180m?: number[],
-    winddirection_10m?: number[],
-    winddirection_80m?: number[],
-    winddirection_120m?: number[],
-    winddirection_180m?: number[],
+    wind_direction_10m?: number[],
+    wind_direction_80m?: number[],
+    wind_direction_120m?: number[],
+    wind_direction_180m?: number[],
     windgusts_10m?: number[],
     shortwave_radiation?: number[],
     direction_radiation?: number[],
@@ -113,6 +115,7 @@ type weatherDataTypesHourly = {
     soil_moisture_9_27cm?: number[],
     soil_moisture_27_81cm?: number[],
     is_day?: number[],
+    relative_humidity_2m?: number[],
 };
 
 type weatherDataTypesDaily = {
@@ -158,10 +161,10 @@ type weatherDataUnitsHourly = {
     windspeed_80m?: string,
     windspeed_120m?: string,
     windspeed_180m?: string,
-    winddirection_10m?: string,
-    winddirection_80m?: string,
-    winddirection_120m?: string,
-    winddirection_180m?: string,
+    wind_direction_10m?: string,
+    wind_direction_80m?: string,
+    wind_direction_120m?: string,
+    wind_direction_180m?: string,
     windgusts_10m?: string,
     shortwave_radiation?: string,
     direction_radiation?: string,
@@ -191,6 +194,7 @@ type weatherDataUnitsHourly = {
     soil_moisture_9_27cm?: string,
     soil_moisture_27_81cm?: string,
     is_day?: string,
+    relative_humidity_2m: string,
 };
 
 type weatherDataUnitsDaily = {

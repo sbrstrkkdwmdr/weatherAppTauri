@@ -17,14 +17,14 @@ body {
 }
 
 #background {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../public/backgrounds/clear/0.jpg');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../backgrounds/clear/0.jpg');
     z-index: -100;
     filter: blur(5px);
     -webkit-filter: blur(5px);
 }
 
 #backgroundTemp {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../public/backgrounds/clear/0.jpg');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../backgrounds/clear/0.jpg');
     z-index: -101;
 }
 
@@ -184,7 +184,7 @@ table {
     white-space: pre;
     /* border: 1px dotted black; */
     vertical-align: top;
-    font-size: 18px;
+    font-size: 12px;
     padding: 5px;
     text-align: center;
 }
@@ -212,6 +212,13 @@ table {
     border-radius: 15px;
 } */
 
+#subTable td {
+    text-align: right;
+    align-items: end;
+    align-content: end;
+    /* justify-content: center; */
+}
+
 #rainPercent tr {
     height: 21px;
     max-height: 21px;
@@ -225,25 +232,28 @@ table {
 /* #rainPercent {
 } */
 
-#spanMax {
+.spanMax {
     color: #f16969;
 }
 
-#spanMin {
+.spanMin {
     color: #69b0f1;
 }
 
-#spanCur {
+.spanCur {
     color: #76e060;
 }
 
-#spanRain {
+.spanRain {
     color: #69b0f1;
 }
 
-#spanSnow {
+.spanSnow {
     color: #b6cef1;
+}
 
+.spanTitle {
+    font-size: 18px;
 }
 
 
@@ -405,6 +415,7 @@ table {
     right: 0;
     white-space: pre;
     font-size: 11.5px;
+    text-align:right;
 }
 
 .carouselWeather {

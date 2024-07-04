@@ -32,9 +32,10 @@ export async function getWeather(
             return 'NaN coordinates';
         }
         const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}`
-            + "&hourly=weathercode,temperature_2m,precipitation,rain,pressure_msl,windspeed_10m,windgusts_10m,precipitation_probability,showers,snowfall"
             + "&current_weather=true&forecast_days=6&past_days=1"
-            + "&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,rain_sum,showers_sum,snowfall_sum,precipitation_probability_mean,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant,weather_code"
+            + "&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,pressure_msl"
+            + "&hourly=weathercode,temperature_2m,precipitation,rain,pressure_msl,windspeed_10m,windgusts_10m,precipitation_probability,showers,snowfall,relative_humidity_2m,apparent_temperature,pressure_msl,visibility,wind_direction_10m"
+            + "&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,rain_sum,showers_sum,snowfall_sum,precipitation_probability_mean,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant,weather_code,apparent_temperature_max,apparent_temperature_min,uv_index_max,uv_index_clear_sky_max"
             + `&timezone=${(location as types.geoLocale)?.timezone ?? 'Europe/London'}`;
         const data = await axios.get(url)
             .then(x => x.data)

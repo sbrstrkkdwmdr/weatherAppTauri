@@ -12,6 +12,9 @@
 - table backgrounds being mis-aligned
 - consistent sizing on table cells
 
+### Additions
+- add visibility, pressure, humidity and UV index to summary
+
 ## [0.2.0] - 2024-07-03
 
 ### Fixes
