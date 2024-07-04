@@ -1,6 +1,6 @@
 import * as types from './types';
 
-export const test: boolean = true; // true = use test data, false = use API
+export const test: boolean = false; // true = use test data, false = use API
 
 export const transparencyHex = '55';
 

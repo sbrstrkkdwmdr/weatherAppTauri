@@ -12,6 +12,9 @@
 - table backgrounds being mis-aligned
 - consistent sizing on table cells
 
+### Changes
+- change summary to use same layout system as the day selector (no more tables)
+
 ### Additions
 - add visibility, pressure, humidity and UV index to summary
 

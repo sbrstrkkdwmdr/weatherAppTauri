@@ -12,7 +12,7 @@
 
 body {
     color: white;
-    overflow-y: hidden;
+    overflow-y: auto;
     overflow-x: hidden;
 }
 
@@ -169,54 +169,37 @@ table {
 
 /* cur day */
 
-#summaryTable {
-    /* border: 1px solid black; */
+#summaryDiv {
     border-spacing: 1px;
     border-radius: 15px;
     margin: auto;
 }
 
-/* #summaryDiv {} */
+#summaryDiv img {
+    height: 100px;
+    width: auto;
+}
 
+.summaryCarouselRow {
+    scroll-snap-type: x mandatory;
+    display: flex;
+    width: 500px;
+    justify-content: center;
+    margin: auto;
+}
 
-#summaryTable td {
-    width: fit-content;
+.summaryCarouselItem {
     white-space: pre;
-    /* border: 1px dotted black; */
+    text-align: center;
     vertical-align: top;
     font-size: 12px;
     padding: 5px;
-    text-align: center;
-}
 
-#summaryTable>tbody>tr>td {
-    padding-left: 35px;
-    padding-right: 35px;
-}
-
-#summaryTable img {
-    height: auto;
-    width: 75px;
-}
-
-#summaryTable td:nth-child(1) {
-    text-align: right;
-}
-
-#summaryTable td:nth-child(2) {
-    text-align: left;
-}
-
-/* #summaryTable >tbody>tr>td {
-    background-color: #00000066;
+    scroll-snap-align: center;
+    margin: 10px;
+    background-color: #00000022;
     border-radius: 15px;
-} */
-
-#subTable td {
-    text-align: right;
-    align-items: end;
-    align-content: end;
-    /* justify-content: center; */
+    justify-content: center;
 }
 
 #rainPercent tr {
@@ -365,7 +348,7 @@ table {
 }
 
 /* carousel */
-.carousel {
+.dayCarousel {
     scroll-snap-type: x mandatory;
     display: flex;
     width: 500px;
@@ -373,7 +356,7 @@ table {
     margin: auto;
 }
 
-.carouselItem {
+.dayCarouselItem {
     scroll-snap-align: center;
     padding: 5px;
     width: 90px;
@@ -385,31 +368,31 @@ table {
     justify-content: center;
 }
 
-.carouselItem:hover {
+.dayCarouselItem:hover {
     background-color: #005E5988;
 }
 
-.carouselSelected {
+.dayCarouselSelected {
     background-color: #00601188;
 }
 
-.carouselSelected:hover {
+.dayCarouselSelected:hover {
     background-color: #003A5988;
 }
 
-.carouselItem h3 {
+.dayCarouselItem h3 {
     margin: 0;
     font-size: 14px;
 }
 
-.carouselItem img {
+.dayCarouselItem img {
     margin-top: 2px;
     width: 25px;
     height: auto;
     float: left;
 }
 
-.carouselTemp {
+.dayCarouselTemp {
     margin-top: 0;
     float: right;
     right: 0;
@@ -418,7 +401,7 @@ table {
     text-align:right;
 }
 
-.carouselWeather {
+.dayCarouselWeather {
     text-align: center;
     margin-top: 35px;
     margin-left: auto;

@@ -84,19 +84,8 @@ export function dayInfo(data: types.weatherData, main: HTMLElement, dataTime: mo
     const summary = document.createElement('div');
     summary.id = 'summaryDiv';
 
-    const summaryTable = document.createElement('table');
-    summaryTable.id = 'summaryTable';
-    summaryTable.insertRow();
-    // const summaryTableImg = summaryTable.rows[0].insertCell(); //img
-    const summaryTableInfo = summaryTable.rows[0].insertCell(); // info
-    const summaryTableTemp = summaryTable.rows[0].insertCell(); // temp
-    summaryTable.insertRow();
-    const summaryTableRainSpot = summaryTable.rows[1].insertCell();
-    const summaryTableWind = summaryTable.rows[1].insertCell(); // wind
-
     const weatherImg = document.createElement('img');
     weatherImg.src = './weatherState/' + (daily.weathercode![todayIndex] ?? today.weathercode ?? 0) + '.png';
-    summaryTableInfo.appendChild(weatherImg);
 
     const bgurl = `url(./backgrounds/${func.weatherToBackground(daily.weathercode![todayIndex] ?? 0)})`;
     document.getElementById('backgroundTemp').style.backgroundImage =
@@ -129,12 +118,57 @@ export function dayInfo(data: types.weatherData, main: HTMLElement, dataTime: mo
         maxGust: daily.windgusts_10m_max![todayIndex],
     };
 
-    summaryTableTemp.innerHTML = `<span class="spanTitle">Temperature</span>
+    const visibilityList = hourly.visibility.slice(todayHourIndex - 12, todayHourIndex + 11);
+    const pressureList = hourly.pressure_msl.slice(todayHourIndex - 12, todayHourIndex + 11);
+    const humidityList = hourly.relative_humidity_2m.slice(todayHourIndex - 12, todayHourIndex + 11);
+
+    const thirdRowData = [
+        {
+            name: 'Visibility',
+            min: visibilityList.sort((a, b) => a - b)[0],
+            max: visibilityList.sort((a, b) => b - a)[0],
+            units: 'm'
+        },
+        {
+            name: 'Pressure',
+            min: pressureList.sort((a, b) => a - b)[0],
+            max: pressureList.sort((a, b) => b - a)[0],
+            units: 'hPa'
+        },
+        {
+            name: 'Humidity',
+            min: humidityList.sort((a, b) => a - b)[0],
+            max: humidityList.sort((a, b) => b - a)[0],
+            units: '%'
+        },
+        {
+            name: 'UV Index',
+            index: daily.uv_index_max[todayIndex],
+            clearSky: daily.uv_index_clear_sky_max[todayIndex],
+            units: ''
+        },
+    ];
+
+    // first row
+    const firstRow = document.createElement('div');
+    firstRow.className = 'summaryCarouselRow';
+    firstRow.appendChild(weatherImg);
+
+    //second row
+    const secondRow = document.createElement('div');
+    secondRow.className = 'summaryCarouselRow';
+
+    const tempDiv = document.createElement('div');
+    tempDiv.className = 'summaryCarouselItem';
+    tempDiv.innerHTML = `<span class="spanTitle">Temperature</span>
 Cur <span class="spanCur">${temp.cur}</span>°C
 Feels like <span class="spanCur">${temp.app.cur}</span>°C
 Max <span class="spanMax">${temp.max}</span>°C
 Min <span class="spanMin">${temp.min}</span>°C`;
+    secondRow.appendChild(tempDiv);
 
+    const rainDiv = document.createElement('div');
+    rainDiv.className = 'summaryCarouselItem';
     const rainTable = document.createElement('table');
     rainTable.id = 'rainPercent';
     rainTable.insertRow();
@@ -146,69 +180,51 @@ Min <span class="spanMin">${temp.min}</span>°C`;
             rainTable.rows[0].cells[i].style.backgroundColor = '#3c3c3c';
         }
     }
-    summaryTableRainSpot.innerHTML = `<span class="spanTitle">Rainfall</span>
-Chance: <span class="spanCur">${rain.chance}%</span>`;
-    summaryTableRainSpot.appendChild(rainTable);
+    let rainTxt = `<span class="spanTitle">Rainfall</span>
+Chance: <span class="spanCur">${rain.chance}%</span></br>`;
     if (rain.rain > 0) {
-        summaryTableRainSpot.innerHTML += `Rain: <span id="rainfall">${rain.rain}mm</span></br>`;
+        rainTxt += `Rain: <span id="rainfall">${rain.rain}mm</span></br>`;
     }
     if (rain.showers > 0) {
-        summaryTableRainSpot.innerHTML += `Showers: <span id="showers">${rain.showers}mm</span></br>`;
+        rainTxt += `Showers: <span id="showers">${rain.showers}mm</span></br>`;
     }
     if (rain.snow > 0) {
-        summaryTableRainSpot.innerHTML += `Snow: <span id="snowfall">${rain.snow}cm</span></br>`;
+        rainTxt += `Snow: <span id="snowfall">${rain.snow}cm</span></br>`;
     }
+    rainDiv.innerHTML = rainTxt;
+    rainDiv.appendChild(rainTable);
+    secondRow.appendChild(rainDiv);
 
-    summaryTableWind.innerHTML = `<span class="spanTitle">Wind</span>
+    const windDiv = document.createElement('div');
+    windDiv.className = 'summaryCarouselItem';
+
+    windDiv.innerHTML = `<span class="spanTitle">Wind</span>
 Cur <span class="spanCur">${wind.cur}</span>km/h ${wind.dir.emoji}${wind.dir.short}
 Max winds: <span class="spanMax">${wind.max}</span>km/h
 Max gusts: <span class="spanMax">${wind.maxGust}</span>km/h
 `;
+    secondRow.appendChild(windDiv);
 
-    const subTable = document.createElement('table');
-    subTable.id = 'subTable';
-    summaryTable.insertRow();
-    summaryTable.rows[2].insertCell();
-    summaryTable.rows[2].cells[0].appendChild(subTable);
-
-    const visibilityList = hourly.visibility.slice(todayHourIndex - 12, todayHourIndex + 11);
-    const visibility = {
-        min: visibilityList.sort((a, b) => a - b)[0],
-        max: visibilityList.sort((a, b) => b - a)[0],
-    };
-    const pressureList = hourly.pressure_msl.slice(todayHourIndex - 12, todayHourIndex + 11);
-    const pressure = {
-        min: pressureList.sort((a, b) => a - b)[0],
-        max: pressureList.sort((a, b) => b - a)[0],
-    };
-    const humidityList = hourly.relative_humidity_2m.slice(todayHourIndex - 12, todayHourIndex + 11);
-    const humidity = {
-        min: humidityList.sort((a, b) => a - b)[0],
-        max: humidityList.sort((a, b) => b - a)[0],
-    };
-    const uv = {
-        index: daily.uv_index_max[todayIndex],
-        clearSky: daily.uv_index_clear_sky_max[todayIndex],
-    };
-    subTable.insertRow().insertCell();
-    subTable.rows[0].cells[0].innerHTML = `<span class="spanTitle">Visibility</span>
-Max <span class="spanMax">${visibility.max}</span>m
-Min <span class="spanMin">${visibility.min}</span>m`;
-    subTable.rows[0].insertCell();
-    subTable.rows[0].cells[1].innerHTML = `<span class="spanTitle">Pressure</span>
-Max <span class="spanMax">${pressure.max}</span>hPa
-Min <span class="spanMin">${pressure.min}</span>hPa`;
-    subTable.rows[0].insertCell();
-    subTable.rows[0].cells[2].innerHTML = `<span class="spanTitle">Humidity</span>
-Max <span class="spanMax">${humidity.max}</span>%
-Min <span class="spanMin">${humidity.min}</span>%`;
-    subTable.rows[0].insertCell();
-    subTable.rows[0].cells[3].innerHTML = `<span class="spanTitle">UV Index</span>
-Index <span class="spanMax">${uv.index}</span>
-Clear Sky Index <span class="spanMin">${uv.clearSky}</span>`;
-
-
-    summary.appendChild(summaryTable);
+    //third row
+    const thirdRow = document.createElement('div');
+    thirdRow.className = 'summaryCarouselRow';
+    for (const item of thirdRowData) {
+        const elem = document.createElement('div');
+        elem.className = 'summaryCarouselItem';
+        if (item.hasOwnProperty('clearSky')) {
+            elem.innerHTML = `<span class="spanTitle">${item.name}</span>
+Index <span class="spanMax">${item.index}</span>${item.units}
+Clear Sky Index <span class="spanMin">${item.clearSky}</span>${item.units}`;
+        } else {
+            elem.innerHTML = `<span class="spanTitle">${item.name}</span>
+Max <span class="spanMax">${item.max}</span>${item.units}
+Min <span class="spanMin">${item.min}</span>${item.units}`;
+        }
+        thirdRow.appendChild(elem);
+    }
+    summary.appendChild(firstRow);
+    summary.appendChild(secondRow);
+    summary.appendChild(thirdRow);
     main.appendChild(summary);
 }
 
@@ -219,10 +235,10 @@ export function dayCarousel(data: types.weatherData, main: HTMLElement, dataTime
     main.innerHTML = '';
     const daily = data.daily!;
     const carousel = document.createElement('div');
-    carousel.className = 'carousel';
+    carousel.className = 'dayCarousel';
     for (let i = 0; i < daily.time.length; i++) {
         const item = document.createElement('div');
-        item.className = 'carouselItem';
+        item.className = 'dayCarouselItem';
         const time = moment(daily.time[i]);
         const head = document.createElement('h3');
         head.innerHTML = time.format("ddd, YYYY-MM-DD");
@@ -238,25 +254,25 @@ export function dayCarousel(data: types.weatherData, main: HTMLElement, dataTime
         const temperature = document.createElement('p');
         temperature.innerHTML = `Min <span class="spanMin">${daily.temperature_2m_min[i]}</span>°C
 Max <span class="spanMax">${daily.temperature_2m_max[i]}</span>°C`;
-        temperature.className = 'carouselTemp';
+        temperature.className = 'dayCarouselTemp';
         item.appendChild(temperature);
 
         const weather = document.createElement('p');
         weather.innerHTML = weatherCheck.string;
-        weather.className = 'carouselWeather';
+        weather.className = 'dayCarouselWeather';
         item.appendChild(weather);
 
         if (dataTime.format('YYYY-MM-DD') == time.format('YYYY-MM-DD')) {
-            item.classList.add('carouselSelected');
+            item.classList.add('dayCarouselSelected');
         }
 
         item.addEventListener('click', e => {
             console.log('hello');
             daySummary(data, dayMain, location, time, tabMain);
             for (const item of carousel.children) {
-                item.classList.remove('carouselSelected');
+                item.classList.remove('dayCarouselSelected');
             }
-            item.classList.add('carouselSelected');
+            item.classList.add('dayCarouselSelected');
         });
 
         carousel.appendChild(item);
