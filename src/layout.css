@@ -167,7 +167,18 @@ table {
     margin: auto;
 }
 
-/* cur day */
+#dayTitle {
+    width: max-content;
+    text-align: center;
+    margin: auto;
+    padding: 10px;
+}
+
+#dayTitle:hover {
+    color: #b0ff56e7;
+}
+
+/* cur day info */
 
 #summaryDiv {
     border-spacing: 1px;
@@ -352,6 +363,7 @@ table {
 }
 
 /* carousel */
+
 .dayCarousel {
     scroll-snap-type: x mandatory;
     display: flex;

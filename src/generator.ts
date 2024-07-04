@@ -46,19 +46,39 @@ export function daySummary(data: types.weatherData, main: HTMLElement, location:
     nonTable.appendChild(smolTxt);
 
     const dayTitle = document.createElement('h3');
+    dayTitle.id = 'dayTitle'
     dayTitle.innerHTML = `Local time is ${moment().utcOffset(Math.floor(data.utc_offset_seconds / 60))
-        .format("ddd, DD MMM YYYY HH:mm:ss Z")}\n`;
+        .format("ddd, DD MMM YYYY HH:mm:ss Z")}</br>`;
+
     //live update cur time
     setInterval(async () => {
         const localTime = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60))
             .format("ddd, DD MMM YYYY HH:mm:ss Z");
-        dayTitle.innerHTML = `Local time is ${localTime}\n`;
+        dayTitle.innerHTML = `Local time is ${localTime}</br>`;
+        if (moment().utcOffset(Math.floor(data.utc_offset_seconds / 60)).format("ddd, DD MMM YYYY HH:00")
+            != dataTime.format("ddd, DD MMM YYYY HH:00")
+        ) {
+            dayTitle.innerHTML += `Selected time is ${dataTime.format("ddd, DD MMM YYYY HH:00:00 Z")}\n`;
+        }
     }, testData.clockDelay);
+    
     nonTable.appendChild(dayTitle);
-
+    
     main.appendChild(nonTable);
-    dayInfo(data, nonTable, dataTime);
-    tabs(data, tabMain, dataTime);
+    dayInfo(data, nonTable, dataTime.clone());
+    tabs(data, tabMain, dataTime.clone(), main, location);
+
+    dayTitle.addEventListener('click', () => {
+        daySummary(data, main, location, rn, tabMain);
+        const items = document.getElementsByClassName('dayCarouselItem');
+        for (const item of items) {
+            if (item.innerHTML.includes(rn.format('YYYY-MM-DD'))) {
+                item.classList.add('dayCarouselSelected');
+            } else {
+                item.classList.remove('dayCarouselSelected');
+            }
+        }
+    });
 }
 
 /**
@@ -69,9 +89,9 @@ export function dayInfo(data: types.weatherData, main: HTMLElement, dataTime: mo
     const daily = data.daily!;
     const hourly = data.hourly!;
 
-    const rn = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60));
+    // const rn = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60));
     const todayIndex = daily.time.indexOf(dataTime.format("YYYY-MM-DD"));
-    const hourIndex = hourly.time.indexOf(rn.format('YYYY-MM-DD[T]HH') + ':00') ?? 12;
+    const hourIndex = hourly.time.indexOf(dataTime.format('YYYY-MM-DD[T]HH') + ':00') ?? 12;
     let todayHourIndex = hourly.time.indexOf(dataTime.format("YYYY-MM-DD") + 'T12:00') ?? 12;
 
     if (todayHourIndex < 12) {
@@ -269,8 +289,8 @@ Max <span class="spanMax">${daily.temperature_2m_max[i]}</span>°C`;
 
         item.addEventListener('click', e => {
             daySummary(data, dayMain, location, time, tabMain);
-            for (const item of carousel.children) {
-                item.classList.remove('dayCarouselSelected');
+            for (const child of carousel.children) {
+                child.classList.remove('dayCarouselSelected');
             }
             item.classList.add('dayCarouselSelected');
         });
@@ -281,14 +301,14 @@ Max <span class="spanMax">${daily.temperature_2m_max[i]}</span>°C`;
     main.appendChild(carousel);
 }
 
-export function tabs(data: types.weatherData, main: HTMLElement, dataTime: moment.Moment) {
+export function tabs(data: types.weatherData, main: HTMLElement, dataTime: moment.Moment, dayMain: HTMLElement, location: types.geoLocale | types.mapLocation) {
     document.getElementById('tabButtons')
         .style.display = '';
 
     main.innerHTML = '';
     // dayRow(data, main, dataTime);
-    weekRow(data, main, dataTime, 4);
-    weekRow(data, main, dataTime, 1);
+    weekRow(data, main, dataTime, 4, dayMain, location);
+    weekRow(data, main, dataTime, 1, dayMain, location);
 
     // const dailyButton = document.getElementById('tabRowDaily');
     const weeklyButton = document.getElementById('tabRowWeekly');
@@ -490,7 +510,7 @@ export function dayRow(data: types.weatherData, main: HTMLElement, dataTime: mom
 /**
  * creates weather table
  */
-export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: moment.Moment, hrSeperator: number) {
+export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: moment.Moment, hrSeperator: number, dayMain: HTMLElement, location: types.geoLocale | types.mapLocation) {
     const weeklyTable = document.createElement('table');
     weeklyTable.id = 'weeklyTable#' + hrSeperator;
     weeklyTable.className = 'tabbedTable';
@@ -574,6 +594,19 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
             }
         }
 
+        timeRow.cells[pos].addEventListener('click', () => {
+            daySummary(data, dayMain, location, kyou, main);
+            const items = document.getElementsByClassName('dayCarouselItem');
+            for (const item of items) {
+                if (item.innerHTML.includes(kyou.format('YYYY-MM-DD'))) {
+                    item.classList.add('dayCarouselSelected');
+                } else {
+                    item.classList.remove('dayCarouselSelected');
+                }
+            }
+        });
+
+        //highlight current time cells
         setTimeout(async () => {
             if (
                 ((+dataTime.format("HH") < +kyou.format("HH") + (hrSeperator / 2)) &&
@@ -630,7 +663,7 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
 
     weeklyTable.insertRow();
     weeklyTable.rows[0].insertCell().appendChild(labelTable);
-    const dataContainer = document.createElement('div'); //for scrolling
+    const dataContainer = document.createElement('div'); //for scrolling (just having the table by itself wont work)
     dataContainer.id = 'tableDiv';
     dataContainer.appendChild(table);
     weeklyTable.rows[0].insertCell().appendChild(dataContainer);

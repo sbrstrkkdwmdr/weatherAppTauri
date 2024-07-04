@@ -3,8 +3,8 @@
 ## to do list
 
 - using map to select shows location name
-- show air quality, pressure, visibility, humidity
 - get proper weather icons
+- fix "selected time" UTC offset being incorrect (shows local offset instead of data offset ie +10 instead of +8)
 
 ## [WIP] - xxxx-xx-xx
 
@@ -18,6 +18,8 @@
 
 ### Additions
 - add visibility, pressure, humidity and UV index to summary
+- option to select hour of the day (shows "selected time")
+- pressing the local time/selected time header resets selected time
 
 ### Removals
 - removed "Today" table
