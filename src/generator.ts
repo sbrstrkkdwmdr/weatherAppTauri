@@ -237,7 +237,7 @@ Max gusts: <span class="spanMax">${wind.maxGust}</span>km/h
         if (item.hasOwnProperty('clearSky')) {
             elem.innerHTML = `<span class="spanTitle">${item.name}</span>
 Index <span class="spanMax">${item.index}</span>${item.units}
-Clear Sky Index <span class="spanMin">${item.clearSky}</span>${item.units}`;
+Clear Sky Index <span class="spanMax">${item.clearSky}</span>${item.units}`;
         } else {
             elem.innerHTML = `<span class="spanTitle">${item.name}</span>
 Max <span class="spanMax">${item.max}</span>${item.units}

@@ -5,6 +5,7 @@
 - using map to select shows location name
 - get proper weather icons
 - fix "selected time" UTC offset being incorrect (shows local offset instead of data offset ie +10 instead of +8)
+- fix current time and local time desync (±100ms)
 
 ## [WIP] - xxxx-xx-xx
 
