@@ -12,6 +12,7 @@
 - table backgrounds being mis-aligned
 - consistent sizing on table cells
 - make background fixed to avoid white backgrounds on different aspect ratios
+- table resetting everytime the time changes
 
 ### Changes
 - change summary to use same layout system as the day selector (no more tables)

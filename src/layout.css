@@ -206,7 +206,6 @@ table {
     vertical-align: top;
     font-size: 12px;
     padding: 5px;
-
     scroll-snap-align: center;
     margin: 10px;
     background-color: #00000022;
@@ -269,32 +268,25 @@ table {
     max-height: 32px;
 }
 
-#tableLabel {
+.tableLabel {
     /* background-color: #1f1f1f; */
     color: #747474;
     table-layout: fixed;
 }
 
-#tableLabel td {
+.tableLabel td {
     white-space: nowrap;
     overflow: hidden;
     text-align: right;
 }
 
-#tableLabel td:first-child {
+.tableLabel td:first-child {
     color: #ffffff;
 }
 
-#tableLabel tr {
+.tableLabel tr {
     min-height: 21px;
     max-height: 32px;
-}
-
-#tableData {
-    /* background-color: #1f1f1f; */
-    color: #ffffff;
-    width: 52vw;
-    max-width: 1000px;
 }
 
 .weatherRow,
@@ -310,7 +302,14 @@ table {
     height: 32px;
 }
 
-#tableData td {
+.tableData {
+    /* background-color: #1f1f1f; */
+    color: #ffffff;
+    width: 52vw;
+    max-width: 1000px;
+}
+
+.tableData td {
     text-align: center;
     padding-left: 5px;
     padding-right: 5px;
@@ -318,16 +317,16 @@ table {
     min-width: 42px;
 }
 
-#tableData tr {
+.tableData tr {
     height: 21px;
 }
 
-#tableData img {
+.tableData img {
     width: 25px;
     height: auto;
 }
 
-#tableDiv {
+.tableDiv {
     width: 52vw;
     max-width: 1000px;
     overflow: auto;

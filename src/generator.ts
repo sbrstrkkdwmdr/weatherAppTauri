@@ -46,10 +46,14 @@ export function daySummary(data: types.weatherData, main: HTMLElement, location:
     nonTable.appendChild(smolTxt);
 
     const dayTitle = document.createElement('h3');
-    dayTitle.id = 'dayTitle'
+    dayTitle.id = 'dayTitle';
     dayTitle.innerHTML = `Local time is ${moment().utcOffset(Math.floor(data.utc_offset_seconds / 60))
         .format("ddd, DD MMM YYYY HH:mm:ss Z")}</br>`;
-
+    if (moment().utcOffset(Math.floor(data.utc_offset_seconds / 60)).format("ddd, DD MMM YYYY HH:00")
+        != dataTime.format("ddd, DD MMM YYYY HH:00")
+    ) {
+        dayTitle.innerHTML += `Selected time is ${dataTime.format("ddd, DD MMM YYYY HH:00:00 Z")}\n`;
+    }
     //live update cur time
     setInterval(async () => {
         const localTime = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60))
@@ -61,12 +65,11 @@ export function daySummary(data: types.weatherData, main: HTMLElement, location:
             dayTitle.innerHTML += `Selected time is ${dataTime.format("ddd, DD MMM YYYY HH:00:00 Z")}\n`;
         }
     }, testData.clockDelay);
-    
+
     nonTable.appendChild(dayTitle);
-    
+
     main.appendChild(nonTable);
     dayInfo(data, nonTable, dataTime.clone());
-    tabs(data, tabMain, dataTime.clone(), main, location);
 
     dayTitle.addEventListener('click', () => {
         daySummary(data, main, location, rn, tabMain);
@@ -293,6 +296,8 @@ Max <span class="spanMax">${daily.temperature_2m_max[i]}</span>°C`;
                 child.classList.remove('dayCarouselSelected');
             }
             item.classList.add('dayCarouselSelected');
+            tabsUpdateTime(document.getElementById('dataTable#1') as HTMLTableElement, time, 1);
+            tabsUpdateTime(document.getElementById('dataTable#4') as HTMLTableElement, time, 4);
         });
 
         carousel.appendChild(item);
@@ -363,7 +368,7 @@ export function dayRow(data: types.weatherData, main: HTMLElement, dataTime: mom
     dailyTable.id = 'dailyTable';
     dailyTable.className = 'tabbedTable';
     const table = document.createElement('table');
-    table.id = 'tableData';
+    table.className = 'tableData';
     const dayRow = table.insertRow();
     const timeRow = table.insertRow();
     const weatherRow = table.insertRow();
@@ -494,7 +499,7 @@ export function dayRow(data: types.weatherData, main: HTMLElement, dataTime: mom
     dailyTable.insertRow();
     dailyTable.rows[0].insertCell().appendChild(labelTable);
     const dataContainer = document.createElement('div');
-    dataContainer.id = 'tableDiv';
+    dataContainer.className = 'tableDiv';
     dataContainer.appendChild(table);
     dailyTable.rows[0].insertCell().appendChild(dataContainer);
     main.appendChild(dailyTable);
@@ -515,7 +520,8 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
     weeklyTable.id = 'weeklyTable#' + hrSeperator;
     weeklyTable.className = 'tabbedTable';
     const table = document.createElement('table');
-    table.id = 'tableData';
+    table.className = 'tableData';
+    table.id = 'dataTable#' + hrSeperator;
     const dayRow = table.insertRow();
     const timeRow = table.insertRow();
     const weatherRow = table.insertRow();
@@ -593,6 +599,7 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
                 dayRow.cells[pos / daySep].innerHTML = kyou.format("ddd, YYYY-MM-DD");
             }
         }
+        timeRow.cells[pos].id = 'cell' + kyou.format("YYYY-MM-DD[T]HH:00");
 
         timeRow.cells[pos].addEventListener('click', () => {
             daySummary(data, dayMain, location, kyou, main);
@@ -604,43 +611,45 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
                     item.classList.remove('dayCarouselSelected');
                 }
             }
+            tabsUpdateTime(table, kyou, hrSeperator);
         });
 
         //highlight current time cells
         setTimeout(async () => {
-            if (
-                ((+dataTime.format("HH") < +kyou.format("HH") + (hrSeperator / 2)) &&
-                    (+dataTime.format("HH") >= +kyou.format("HH") - (hrSeperator / 2)) &&
-                    (+dataTime.format("DD") == +kyou.format("DD"))) ||
-                ((+kyou.format("HH") == 0) &&
-                    (+dataTime.format("HH") < 24 + (hrSeperator / 2)) &&
-                    (+dataTime.format("HH") >= 24 - (hrSeperator / 2)) &&
-                    (+dataTime.format("DD") + 1 == +kyou.format("DD")))
-            ) {
-                const bg = '#ff000044';
-                const curtimcl = 'currentTimeCell';
-                timeRow.cells[pos].style.backgroundColor = bg;
-                weatherRow.cells[pos].style.backgroundColor = bg;
-                tempRow.cells[pos].style.backgroundColor = bg;
-                precipRow.cells[pos].style.backgroundColor = bg;
-                preChRow.cells[pos].style.backgroundColor = bg;
-                windRow.cells[pos].style.backgroundColor = bg;
-                gustRow.cells[pos].style.backgroundColor = bg;
+            tabsUpdateTime(table, dataTime, hrSeperator);
+            // if (
+            //     ((+dataTime.format("HH") < +kyou.format("HH") + (hrSeperator / 2)) &&
+            //         (+dataTime.format("HH") >= +kyou.format("HH") - (hrSeperator / 2)) &&
+            //         (+dataTime.format("DD") == +kyou.format("DD"))) ||
+            //     ((+kyou.format("HH") == 0) &&
+            //         (+dataTime.format("HH") < 24 + (hrSeperator / 2)) &&
+            //         (+dataTime.format("HH") >= 24 - (hrSeperator / 2)) &&
+            //         (+dataTime.format("DD") + 1 == +kyou.format("DD")))
+            // ) {
+            //     const bg = '#ff000044';
+            //     const curtimcl = 'currentTimeCell';
+            //     timeRow.cells[pos].style.backgroundColor = bg;
+            //     weatherRow.cells[pos].style.backgroundColor = bg;
+            //     tempRow.cells[pos].style.backgroundColor = bg;
+            //     precipRow.cells[pos].style.backgroundColor = bg;
+            //     preChRow.cells[pos].style.backgroundColor = bg;
+            //     windRow.cells[pos].style.backgroundColor = bg;
+            //     gustRow.cells[pos].style.backgroundColor = bg;
 
-                timeRow.cells[pos].className = curtimcl;
-                weatherRow.cells[pos].className = curtimcl;
-                tempRow.cells[pos].className = curtimcl;
-                precipRow.cells[pos].className = curtimcl;
-                preChRow.cells[pos].className = curtimcl;
-                windRow.cells[pos].className = curtimcl;
-                gustRow.cells[pos].className = curtimcl;
+            //     timeRow.cells[pos].className = curtimcl;
+            //     weatherRow.cells[pos].className = curtimcl;
+            //     tempRow.cells[pos].className = curtimcl;
+            //     precipRow.cells[pos].className = curtimcl;
+            //     preChRow.cells[pos].className = curtimcl;
+            //     windRow.cells[pos].className = curtimcl;
+            //     gustRow.cells[pos].className = curtimcl;
 
-                // weatherRow.cells[pos].scrollIntoView({ inline: "start" });
-            }
+            //     // weatherRow.cells[pos].scrollIntoView({ inline: "start" });
+            // }
         }, 100);
     }
     const labelTable = document.createElement('table');
-    labelTable.id = 'tableLabel';
+    labelTable.className = 'tableLabel';
     labelTable.insertRow().insertCell(0).innerHTML = 'Day';
     labelTable.insertRow().insertCell(0).innerHTML = 'Time';
     labelTable.insertRow().insertCell(0).innerHTML = 'Weather';
@@ -664,7 +673,7 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
     weeklyTable.insertRow();
     weeklyTable.rows[0].insertCell().appendChild(labelTable);
     const dataContainer = document.createElement('div'); //for scrolling (just having the table by itself wont work)
-    dataContainer.id = 'tableDiv';
+    dataContainer.className = 'tableDiv';
     dataContainer.appendChild(table);
     weeklyTable.rows[0].insertCell().appendChild(dataContainer);
     main.appendChild(weeklyTable);
@@ -874,4 +883,34 @@ function tabsScrollTo(elem: HTMLElement) {
             console.log(err);
         }
     }, 500);
+}
+
+function tabsUpdateTime(table: HTMLTableElement, dataTime: moment.Moment, hrSeperator: number) {
+    console.log('testing!!');
+    for (let i = 0; i < table.rows[1].cells.length; i++) {
+        const cell = table.rows[1].cells[i];
+        const kyou = moment(cell.id.replace('cell', ''));
+        if (((+dataTime.format("HH") < +kyou.format("HH") + (hrSeperator / 2)) &&
+            (+dataTime.format("HH") >= +kyou.format("HH") - (hrSeperator / 2)) &&
+            (+dataTime.format("DD") == +kyou.format("DD"))) ||
+            ((+kyou.format("HH") == 0) &&
+                (+dataTime.format("HH") < 24 + (hrSeperator / 2)) &&
+                (+dataTime.format("HH") >= 24 - (hrSeperator / 2)) &&
+                (+dataTime.format("DD") + 1 == +kyou.format("DD")))) {
+            for (const row of table.rows) {
+                if (row.className != 'dayRow') {
+                    row.cells[i].style.backgroundColor = '#ff000044';
+                    row.cells[i].className = 'currentTimeCell';
+                }
+            }
+            cell.scrollIntoView({ inline: "start" });
+        } else {
+            for (const row of table.rows) {
+                if (row.className != 'dayRow') {
+                    row.cells[i].style.backgroundColor = '';
+                    row.cells[i].className = '';
+                }
+            }
+        }
+    }
 }

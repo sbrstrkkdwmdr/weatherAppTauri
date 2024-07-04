@@ -191,7 +191,7 @@ async function display(data: types.weatherData | string, location: types.geoLoca
 
             generate.daySummary(data, dayDiv, location, rn, tabDiv);
             generate.dayCarousel(data, carouselDiv, rn, location, dayDiv, tabDiv);
-            // generate.tabs(data, tabDiv, rn, dayDiv, location);
+            generate.tabs(data, tabDiv, rn, dayDiv, location);
             errmsg.innerHTML = '';
             console.log(data);
         } catch (err) {
