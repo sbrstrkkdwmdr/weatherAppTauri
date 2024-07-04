@@ -7,7 +7,7 @@ import * as func from './func';
 import * as types from './types';
 
 export function daySummary(data: types.weatherData, main: HTMLElement, location: types.geoLocale | types.mapLocation, dataTime: moment.Moment, tabMain: HTMLElement) {
-    const rn = moment();
+    const rn = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60));
     main.innerHTML = '';
     const today = data.current_weather!;
     const daily = data.daily!;
@@ -69,7 +69,7 @@ export function dayInfo(data: types.weatherData, main: HTMLElement, dataTime: mo
     const daily = data.daily!;
     const hourly = data.hourly!;
 
-    const rn = moment();
+    const rn = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60));
     const todayIndex = daily.time.indexOf(dataTime.format("YYYY-MM-DD"));
     const hourIndex = hourly.time.indexOf(rn.format('YYYY-MM-DD[T]HH') + ':00') ?? 12;
     let todayHourIndex = hourly.time.indexOf(dataTime.format("YYYY-MM-DD") + 'T12:00') ?? 12;
@@ -236,10 +236,11 @@ export function dayCarousel(data: types.weatherData, main: HTMLElement, dataTime
     const daily = data.daily!;
     const carousel = document.createElement('div');
     carousel.className = 'dayCarousel';
+    const rn = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60));
     for (let i = 0; i < daily.time.length; i++) {
         const item = document.createElement('div');
         item.className = 'dayCarouselItem';
-        const time = moment(daily.time[i]);
+        const time = moment(daily.time[i] + moment().utcOffset(Math.floor(data.utc_offset_seconds / 60)).format('[T]HH:00'));
         const head = document.createElement('h3');
         head.innerHTML = time.format("ddd, YYYY-MM-DD");
         item.appendChild(head);
@@ -267,7 +268,6 @@ Max <span class="spanMax">${daily.temperature_2m_max[i]}</span>°C`;
         }
 
         item.addEventListener('click', e => {
-            console.log('hello');
             daySummary(data, dayMain, location, time, tabMain);
             for (const item of carousel.children) {
                 item.classList.remove('dayCarouselSelected');
@@ -286,46 +286,47 @@ export function tabs(data: types.weatherData, main: HTMLElement, dataTime: momen
         .style.display = '';
 
     main.innerHTML = '';
-    dayRow(data, main, dataTime);
+    // dayRow(data, main, dataTime);
     weekRow(data, main, dataTime, 4);
     weekRow(data, main, dataTime, 1);
 
-    const dailyButton = document.getElementById('tabRowDaily');
+    // const dailyButton = document.getElementById('tabRowDaily');
     const weeklyButton = document.getElementById('tabRowWeekly');
     const fullButton = document.getElementById('tabRowFull');
-    const days = document.getElementById('dailyTable');
+    // const days = document.getElementById('dailyTable');
     const weeks = document.getElementById('weeklyTable#4');
     const full = document.getElementById('weeklyTable#1');
-    days.style.display = '';
+    // days.style.display = '';
     weeks.style.display = 'none';
     full.style.display = 'none';
-    if (dailyButton.classList.contains('tabRowCurrent')) {
-        selectClassTab(dailyButton, [weeklyButton, fullButton], 'tabRowCurrent');
-        divTab(days, [weeks, full]);
-        tabsScrollTo(days);
+    // if (dailyButton.classList.contains('tabRowCurrent')) {
+    //     selectClassTab(dailyButton, [weeklyButton, fullButton], 'tabRowCurrent');
+    //     divTab(days, [weeks, full]);
+    //     tabsScrollTo(days);
 
-    } else if (weeklyButton.classList.contains('tabRowCurrent')) {
-        selectClassTab(weeklyButton, [dailyButton, fullButton], 'tabRowCurrent');
-        divTab(weeks, [days, full]);
+    // }
+    if (weeklyButton.classList.contains('tabRowCurrent')) {
+        selectClassTab(weeklyButton, [fullButton], 'tabRowCurrent');
+        divTab(weeks, [full]);
         tabsScrollTo(weeks);
     } else {
-        selectClassTab(fullButton, [dailyButton, weeklyButton], 'tabRowCurrent');
-        divTab(full, [days, weeks]);
+        selectClassTab(fullButton, [weeklyButton], 'tabRowCurrent');
+        divTab(full, [weeks]);
         tabsScrollTo(full);
     }
-    dailyButton.addEventListener('click', (e) => {
-        selectClassTab(dailyButton, [weeklyButton, fullButton], 'tabRowCurrent');
-        divTab(days, [weeks, full]);
-        tabsScrollTo(days);
-    });
+    // dailyButton.addEventListener('click', (e) => {
+    //     selectClassTab(dailyButton, [weeklyButton, fullButton], 'tabRowCurrent');
+    //     divTab(days, [weeks, full]);
+    //     tabsScrollTo(days);
+    // });
     weeklyButton.addEventListener('click', (e) => {
-        selectClassTab(weeklyButton, [dailyButton, fullButton], 'tabRowCurrent');
-        divTab(weeks, [days, full]);
+        selectClassTab(weeklyButton, [fullButton], 'tabRowCurrent');
+        divTab(weeks, [full]);
         tabsScrollTo(weeks);
     });
     fullButton.addEventListener('click', (e) => {
-        selectClassTab(fullButton, [dailyButton, weeklyButton], 'tabRowCurrent');
-        divTab(full, [days, weeks]);
+        selectClassTab(fullButton, [weeklyButton], 'tabRowCurrent');
+        divTab(full, [weeks]);
         tabsScrollTo(full);
     });
 }

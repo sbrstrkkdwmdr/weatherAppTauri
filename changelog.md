@@ -14,9 +14,13 @@
 
 ### Changes
 - change summary to use same layout system as the day selector (no more tables)
+- changing the day keeps the same hour
 
 ### Additions
 - add visibility, pressure, humidity and UV index to summary
+
+### Removals
+- removed "Today" table
 
 ## [0.2.0] - 2024-07-03
 
