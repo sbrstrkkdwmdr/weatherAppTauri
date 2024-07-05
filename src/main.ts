@@ -224,3 +224,17 @@ async function display(data: types.weatherData | string, location: types.geoLoca
         }, 2500);
     }
 }
+
+(() => {
+    for (let elem of document.getElementsByClassName('chartContainer')) {
+        console.log('aopijowiap');
+        const helem = elem as HTMLElement;
+        helem.style.display = 'none';
+        helem.addEventListener('click', () => {
+            helem.style.display = 'none';
+            const canvas = document.getElementById('chart') as HTMLCanvasElement;
+            canvas.getContext('2d');
+        });
+    }
+
+})();

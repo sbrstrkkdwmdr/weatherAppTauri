@@ -8,6 +8,12 @@ export const zeroColour = '#00000000';
 
 export const clockDelay = 10; //time between clock ticks
 
+export const chartColours = [
+    '#f16969', // red
+    '#69b0f1', // blue
+    '#76e060', // green
+];
+
 export const weather: types.weatherData = {
     "latitude": 1.25,
     "longitude": 103.75,

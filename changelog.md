@@ -4,8 +4,7 @@
 
 - using map to select shows location name
 - get proper weather icons
-- fix "selected time" UTC offset being incorrect (shows local offset instead of data offset ie +10 instead of +8)
-- fix current time and local time desync (±100ms)
+- chart being size being wrong on the first render
 
 ## [WIP] - xxxx-xx-xx
 
@@ -23,6 +22,7 @@
 - add visibility, pressure, humidity and UV index to summary
 - option to select hour of the day (shows "selected time")
 - pressing the local time/selected time header resets selected time
+- pressing on weather events displays a graph
 
 ### Removals
 - removed "Today" table

@@ -6,6 +6,9 @@ import * as testData from './data';
 import * as func from './func';
 import * as types from './types';
 
+chartjs.Chart.register(...chartjs.registerables);
+let chart: chartjs.Chart;
+
 export function daySummary(data: types.weatherData, main: HTMLElement, location: types.geoLocale | types.mapLocation, dataTime: moment.Moment, tabMain: HTMLElement) {
     const rn = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60));
     main.innerHTML = '';
@@ -150,18 +153,21 @@ export function dayInfo(data: types.weatherData, main: HTMLElement, dataTime: mo
             name: 'Visibility',
             min: visibilityList.sort((a, b) => a - b)[0],
             max: visibilityList.sort((a, b) => b - a)[0],
+            data: visibilityList,
             units: 'm'
         },
         {
             name: 'Pressure',
             min: pressureList.sort((a, b) => a - b)[0],
             max: pressureList.sort((a, b) => b - a)[0],
+            data: pressureList,
             units: 'hPa'
         },
         {
             name: 'Humidity',
             min: humidityList.sort((a, b) => a - b)[0],
             max: humidityList.sort((a, b) => b - a)[0],
+            data: humidityList,
             units: '%'
         },
         {
@@ -188,6 +194,11 @@ Cur <span class="spanCur">${temp.cur}</span>°C
 Feels like <span class="spanCur">${temp.app.cur}</span>°C
 Max <span class="spanMax">${temp.max}</span>°C
 Min <span class="spanMin">${temp.min}</span>°C`;
+    tempDiv.addEventListener('click', () => {
+        dataChartPopup(
+            [{ name: 'Temperature', num: hourly.temperature_2m }],
+             hourly.time, hourIndex, ['#84ff6b']);
+    });
     secondRow.appendChild(tempDiv);
 
     const rainDiv = document.createElement('div');
@@ -216,6 +227,15 @@ Chance: <span class="spanCur">${rain.chance}%</span></br>`;
     }
     rainDiv.innerHTML = rainTxt;
     rainDiv.appendChild(rainTable);
+    rainDiv.addEventListener('click', () => {
+        dataChartPopup([
+            { name: 'Rain', num: hourly.rain },
+            { name: 'Showers', num: hourly.showers },
+            { name: 'Snow', num: hourly.snowfall },
+        ], hourly.time, hourIndex,
+            ['#84ff6b', '#69b0f1', '#69b0f1', '#b6cef1']
+        );
+    });
     secondRow.appendChild(rainDiv);
 
     const windDiv = document.createElement('div');
@@ -226,6 +246,14 @@ Cur <span class="spanCur">${wind.cur}</span>km/h ${wind.dir.emoji}${wind.dir.sho
 Max winds: <span class="spanMax">${wind.max}</span>km/h
 Max gusts: <span class="spanMax">${wind.maxGust}</span>km/h
 `;
+    windDiv.addEventListener('click', () => {
+        dataChartPopup([
+            { name: 'Wind speed', num: hourly.windspeed_10m },
+            { name: 'Gust speed', num: hourly.windgusts_10m },
+        ], hourly.time, hourIndex,
+            ['#84ff6b', '#f16969',]
+        );
+    });
     secondRow.appendChild(windDiv);
 
     //third row
@@ -238,10 +266,25 @@ Max gusts: <span class="spanMax">${wind.maxGust}</span>km/h
             elem.innerHTML = `<span class="spanTitle">${item.name}</span>
 Index <span class="spanMax">${item.index}</span>${item.units}
 Clear Sky Index <span class="spanMax">${item.clearSky}</span>${item.units}`;
+            elem.addEventListener('click', () => {
+                dataChartPopup([
+                    { name: 'UV Index', num: daily.uv_index_max },
+                    { name: 'Clear Sky UV Index', num: daily.uv_index_clear_sky_max },
+                ], daily.time, todayIndex,
+                    ['#84ff6b',]
+                );
+            });
         } else {
             elem.innerHTML = `<span class="spanTitle">${item.name}</span>
 Max <span class="spanMax">${item.max}</span>${item.units}
 Min <span class="spanMin">${item.min}</span>${item.units}`;
+            elem.addEventListener('click', () => {
+                dataChartPopup([
+                    { name: item.name, num: item.data },
+                ], hourly.time, hourIndex,
+                    ['#84ff6b',]
+                );
+            });
         }
         thirdRow.appendChild(elem);
     }
@@ -617,35 +660,6 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
         //highlight current time cells
         setTimeout(async () => {
             tabsUpdateTime(table, dataTime, hrSeperator);
-            // if (
-            //     ((+dataTime.format("HH") < +kyou.format("HH") + (hrSeperator / 2)) &&
-            //         (+dataTime.format("HH") >= +kyou.format("HH") - (hrSeperator / 2)) &&
-            //         (+dataTime.format("DD") == +kyou.format("DD"))) ||
-            //     ((+kyou.format("HH") == 0) &&
-            //         (+dataTime.format("HH") < 24 + (hrSeperator / 2)) &&
-            //         (+dataTime.format("HH") >= 24 - (hrSeperator / 2)) &&
-            //         (+dataTime.format("DD") + 1 == +kyou.format("DD")))
-            // ) {
-            //     const bg = '#ff000044';
-            //     const curtimcl = 'currentTimeCell';
-            //     timeRow.cells[pos].style.backgroundColor = bg;
-            //     weatherRow.cells[pos].style.backgroundColor = bg;
-            //     tempRow.cells[pos].style.backgroundColor = bg;
-            //     precipRow.cells[pos].style.backgroundColor = bg;
-            //     preChRow.cells[pos].style.backgroundColor = bg;
-            //     windRow.cells[pos].style.backgroundColor = bg;
-            //     gustRow.cells[pos].style.backgroundColor = bg;
-
-            //     timeRow.cells[pos].className = curtimcl;
-            //     weatherRow.cells[pos].className = curtimcl;
-            //     tempRow.cells[pos].className = curtimcl;
-            //     precipRow.cells[pos].className = curtimcl;
-            //     preChRow.cells[pos].className = curtimcl;
-            //     windRow.cells[pos].className = curtimcl;
-            //     gustRow.cells[pos].className = curtimcl;
-
-            //     // weatherRow.cells[pos].scrollIntoView({ inline: "start" });
-            // }
         }, 100);
     }
     const labelTable = document.createElement('table');
@@ -913,4 +927,51 @@ function tabsUpdateTime(table: HTMLTableElement, dataTime: moment.Moment, hrSepe
             }
         }
     }
+}
+
+/**
+ * data charts
+ */
+function dataChartPopup(data: { name: string, num: number[]; }[], labels: string[], index?: number, colours?: string[]) {
+    const main = document.getElementsByClassName('chartContainer')[0] as HTMLElement;
+    main.style.display = '';
+    const canvas = document.getElementById('chart') as HTMLCanvasElement;
+    canvas.innerHTML = '';
+    let i = -1;
+    chart?.destroy();
+    chart = new chartjs.Chart(canvas.getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: data.map(x => {
+                i++;
+                return {
+                    label: x.name,
+                    data: x.num,
+                    fill: false,
+                    borderColor: colours[i] ?? testData.chartColours[i],
+                };
+            })
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: false
+                }
+            },
+            elements: {
+                point: {
+                    radius: customRadius,
+                }
+            }
+        }
+    });
+    chart.canvas.style.height = '75vh';
+    chart.canvas.style.width = '75vw';
+    main.appendChild(canvas);
+    function customRadius(ctx: any) {
+        return ctx.dataIndex === index ? 10 : 2;
+    }
+    console.log('wahhh');
 }

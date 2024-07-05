@@ -235,7 +235,7 @@ table {
 }
 
 .spanCur {
-    color: #76e060;
+    color: #84ff6b;
 }
 
 .spanRain {
@@ -425,4 +425,34 @@ table {
     width: min-content;
     white-space: pre;
     font-size: 12px;
+}
+
+/* data chart pop ups */
+.chartContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 500;
+    width: 100vw;
+    height: 100vh;
+    backdrop-filter: blur(5px);
+    border-radius: 15px;
+}
+
+.chartPopup {
+    top: 0px;
+    position: absolute;
+    z-index: 510;
+    width: 75vw;
+    height: 75vh;
+    margin: 12.5vh 12.5vw;
+    background-color: #00000055;
+    border-radius: 15px;
+}
+
+#chart {
+    width: 75vw !important;
+    height: 75vh !important;
+    margin: 12.5vh 12.5vw;
+    color:white;
 }
