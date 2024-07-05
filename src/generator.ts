@@ -153,21 +153,21 @@ export function dayInfo(data: types.weatherData, main: HTMLElement, dataTime: mo
             name: 'Visibility',
             min: visibilityList.sort((a, b) => a - b)[0],
             max: visibilityList.sort((a, b) => b - a)[0],
-            data: visibilityList,
+            data: hourly.visibility,
             units: 'm'
         },
         {
             name: 'Pressure',
             min: pressureList.sort((a, b) => a - b)[0],
             max: pressureList.sort((a, b) => b - a)[0],
-            data: pressureList,
+            data: hourly.pressure_msl,
             units: 'hPa'
         },
         {
             name: 'Humidity',
             min: humidityList.sort((a, b) => a - b)[0],
             max: humidityList.sort((a, b) => b - a)[0],
-            data: humidityList,
+            data: hourly.relative_humidity_2m,
             units: '%'
         },
         {
@@ -195,9 +195,9 @@ Feels like <span class="spanCur">${temp.app.cur}</span>°C
 Max <span class="spanMax">${temp.max}</span>°C
 Min <span class="spanMin">${temp.min}</span>°C`;
     tempDiv.addEventListener('click', () => {
-        dataChartPopup(
+        dataChartPopup('line',
             [{ name: 'Temperature', num: hourly.temperature_2m }],
-             hourly.time, hourIndex, ['#84ff6b']);
+            hourly.time, hourIndex, ['#84ff6b']);
     });
     secondRow.appendChild(tempDiv);
 
@@ -217,23 +217,23 @@ Min <span class="spanMin">${temp.min}</span>°C`;
     let rainTxt = `<span class="spanTitle">Rainfall</span>
 Chance: <span class="spanCur">${rain.chance}%</span></br>`;
     if (rain.rain > 0) {
-        rainTxt += `Rain: <span id="rainfall">${rain.rain}mm</span></br>`;
+        rainTxt += `Rain: <span id="spanRain">${rain.rain}</span>mm</br>`;
     }
     if (rain.showers > 0) {
-        rainTxt += `Showers: <span id="showers">${rain.showers}mm</span></br>`;
+        rainTxt += `Showers: <span id="spanShowers">${rain.showers}</span>mm</br>`;
     }
     if (rain.snow > 0) {
-        rainTxt += `Snow: <span id="snowfall">${rain.snow}cm</span></br>`;
+        rainTxt += `Snow: <span id="spanSnow">${rain.snow}</span>cm</br>`;
     }
     rainDiv.innerHTML = rainTxt;
     rainDiv.appendChild(rainTable);
     rainDiv.addEventListener('click', () => {
-        dataChartPopup([
+        dataChartPopup('bar', [
             { name: 'Rain', num: hourly.rain },
             { name: 'Showers', num: hourly.showers },
             { name: 'Snow', num: hourly.snowfall },
         ], hourly.time, hourIndex,
-            ['#84ff6b', '#69b0f1', '#69b0f1', '#b6cef1']
+            ['#69b0f1', '#8269f1', '#c7d8f1', '#84ff6b']
         );
     });
     secondRow.appendChild(rainDiv);
@@ -247,10 +247,11 @@ Max winds: <span class="spanMax">${wind.max}</span>km/h
 Max gusts: <span class="spanMax">${wind.maxGust}</span>km/h
 `;
     windDiv.addEventListener('click', () => {
-        dataChartPopup([
-            { name: 'Wind speed', num: hourly.windspeed_10m },
-            { name: 'Gust speed', num: hourly.windgusts_10m },
-        ], hourly.time, hourIndex,
+        dataChartPopup('line',
+            [
+                { name: 'Wind speed', num: hourly.windspeed_10m },
+                { name: 'Gust speed', num: hourly.windgusts_10m },
+            ], hourly.time, hourIndex,
             ['#84ff6b', '#f16969',]
         );
     });
@@ -267,7 +268,7 @@ Max gusts: <span class="spanMax">${wind.maxGust}</span>km/h
 Index <span class="spanMax">${item.index}</span>${item.units}
 Clear Sky Index <span class="spanMax">${item.clearSky}</span>${item.units}`;
             elem.addEventListener('click', () => {
-                dataChartPopup([
+                dataChartPopup('line', [
                     { name: 'UV Index', num: daily.uv_index_max },
                     { name: 'Clear Sky UV Index', num: daily.uv_index_clear_sky_max },
                 ], daily.time, todayIndex,
@@ -279,9 +280,10 @@ Clear Sky Index <span class="spanMax">${item.clearSky}</span>${item.units}`;
 Max <span class="spanMax">${item.max}</span>${item.units}
 Min <span class="spanMin">${item.min}</span>${item.units}`;
             elem.addEventListener('click', () => {
-                dataChartPopup([
-                    { name: item.name, num: item.data },
-                ], hourly.time, hourIndex,
+                dataChartPopup('bar',
+                    [
+                        { name: item.name, num: item.data },
+                    ], hourly.time, hourIndex,
                     ['#84ff6b',]
                 );
             });
@@ -932,33 +934,67 @@ function tabsUpdateTime(table: HTMLTableElement, dataTime: moment.Moment, hrSepe
 /**
  * data charts
  */
-function dataChartPopup(data: { name: string, num: number[]; }[], labels: string[], index?: number, colours?: string[]) {
-    const main = document.getElementsByClassName('chartContainer')[0] as HTMLElement;
-    main.style.display = '';
+function dataChartPopup(type: keyof chartjs.ChartTypeRegistry, data: { name: string, num: number[]; }[], labels: string[], index?: number, colours?: string[],
+    dataSecond?: { name: string, num: number[]; }[]
+) {
+    const chartMain = document.getElementById('chartPopup');
     const canvas = document.getElementById('chart') as HTMLCanvasElement;
     canvas.innerHTML = '';
     let i = -1;
     chart?.destroy();
     chart = new chartjs.Chart(canvas.getContext('2d'), {
-        type: 'line',
+        type,
         data: {
             labels: labels,
             datasets: data.map(x => {
                 i++;
-                return {
+                const chartData = {
                     label: x.name,
                     data: x.num,
                     fill: false,
-                    borderColor: colours[i] ?? testData.chartColours[i],
+                    borderColor: 'rgb(100,100,100,0.5)',
+                    backgroundColor: 'rgb(100,100,100,0.5)',
+                    color: 'rgb(100,100,100,0.5)',
                 };
+                switch (type) {
+                    case 'line': default:
+                        chartData['borderColor'] = colours[i] ?? testData.chartColours[i];
+                        break;
+                    case 'bar':
+                        chartData['backgroundColor'] = colours[i] ?? testData.chartColours[i];
+                        break;
+                }
+                return chartData;
             })
         },
         options: {
-            responsive: true,
+            responsive: false,
             scales: {
+                x: {
+                    grid: {
+                        display: true,
+                        drawOnChartArea: true,
+                        drawTicks: true,
+                        color: 'rgb(64, 64, 64)'
+                    }, 
+                    ticks: {
+                        color: 'rgb(128, 128, 128)'
+                    },
+                },
                 y: {
-                    beginAtZero: false
-                }
+                    grid: {
+                        display: true,
+                        drawOnChartArea: true,
+                        drawTicks: true,
+                        color: 'rgb(64, 64, 64)'
+                    },
+                    ticks: {
+                        color: 'rgb(128, 128, 128)'
+                    },
+                    beginAtZero: false,
+                },
+                
+                
             },
             elements: {
                 point: {
@@ -969,9 +1005,13 @@ function dataChartPopup(data: { name: string, num: number[]; }[], labels: string
     });
     chart.canvas.style.height = '75vh';
     chart.canvas.style.width = '75vw';
-    main.appendChild(canvas);
     function customRadius(ctx: any) {
         return ctx.dataIndex === index ? 10 : 2;
     }
-    console.log('wahhh');
+
+    // chartMain.style.display = '';
+    // chartContainer.style.transform = "translateY(0)";
+    setTimeout(() => {
+        chartMain.style.transform = "translateY(0px)";
+    }, 500);
 }

@@ -226,15 +226,19 @@ async function display(data: types.weatherData | string, location: types.geoLoca
 }
 
 (() => {
-    for (let elem of document.getElementsByClassName('chartContainer')) {
-        console.log('aopijowiap');
-        const helem = elem as HTMLElement;
-        helem.style.display = 'none';
-        helem.addEventListener('click', () => {
-            helem.style.display = 'none';
-            const canvas = document.getElementById('chart') as HTMLCanvasElement;
-            canvas.getContext('2d');
+    console.log('aaa');
+    // const chartContainer = document.getElementById('chartContainer');
+    const chartMain = document.getElementById('chartPopup');
+    const mainContent = document.getElementById('mainContent');
+    // chartContainer.style.transform = "translateY(-3000px)";
+    chartMain.style.transform = "translateY(-100vh)";
+    // chartMain.style.display = 'none';
+    setTimeout(() => {
+        mainContent.addEventListener('click', () => {
+            if (chartMain.style.transform == "translateY(0px)") {
+                chartMain.style.transform = "translateY(-100vh)";
+            }
         });
-    }
+    }, 1000);
 
 })();

@@ -4,7 +4,8 @@
 
 - using map to select shows location name
 - get proper weather icons
-- chart being size being wrong on the first render
+- parity with map select
+- map ignores inputs until left-clicked
 
 ## [WIP] - xxxx-xx-xx
 
@@ -22,7 +23,7 @@
 - add visibility, pressure, humidity and UV index to summary
 - option to select hour of the day (shows "selected time")
 - pressing the local time/selected time header resets selected time
-- pressing on weather events displays a graph
+- pressing on weather events displays a graph (click outside the graph to close it)
 
 ### Removals
 - removed "Today" table

@@ -49,6 +49,7 @@ body {
     background-color: #252525;
     height: 45px;
     padding-left: 5px;
+    z-index: 700;
 }
 
 #searchQuery #searchBar {
@@ -238,12 +239,16 @@ table {
     color: #84ff6b;
 }
 
-.spanRain {
+#spanRain {
     color: #69b0f1;
 }
 
-.spanSnow {
-    color: #b6cef1;
+#spanShowers {
+    color: #8269f1;
+}
+
+#spanSnow {
+    color: #c7d8f1;
 }
 
 .spanTitle {
@@ -428,7 +433,7 @@ table {
 }
 
 /* data chart pop ups */
-.chartContainer {
+/* #chartContainer {
     position: absolute;
     top: 0;
     left: 0;
@@ -437,10 +442,11 @@ table {
     height: 100vh;
     backdrop-filter: blur(5px);
     border-radius: 15px;
-}
+} */
 
-.chartPopup {
-    top: 0px;
+#chartPopup {
+    top: 0;
+    left: 0;
     position: absolute;
     z-index: 510;
     width: 75vw;
@@ -448,11 +454,14 @@ table {
     margin: 12.5vh 12.5vw;
     background-color: #00000055;
     border-radius: 15px;
+    transition: ease-in-out 1000ms;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
 }
 
 #chart {
-    width: 75vw !important;
-    height: 75vh !important;
-    margin: 12.5vh 12.5vw;
-    color:white;
+    width: 70vw !important;
+    height: 70vh !important;
+    margin: auto;
+    color: white;
 }
