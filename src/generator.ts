@@ -62,7 +62,7 @@ export function daySummary(data: types.weatherData, main: HTMLElement, location:
         if (moment().utcOffset(Math.floor(data.utc_offset_seconds / 60)).format("ddd, DD MMM YYYY HH:00")
             != dataTime.format("ddd, DD MMM YYYY HH:00")
         ) {
-            dayTitle.innerHTML += `Selected time is ${dataTime.format("ddd, DD MMM YYYY HH:00:00 Z")}\n`;
+            dayTitle.innerHTML += `Selected time is ${dataTime.format("ddd, DD MMM YYYY HH:00:00") + dataTime.utcOffset(Math.floor(data.utc_offset_seconds / 60)).format(' Z')}\n`;
         }
     }, testData.clockDelay);
 
