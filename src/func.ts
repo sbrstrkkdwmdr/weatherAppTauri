@@ -258,17 +258,17 @@ export function genTitleName(data: types.geoLocale): string[] {
     return base;
 }
 
-export function formatCoords(data: types.geoLocale | types.mapLocation): string {
+export function formatCoords(latitude:number,longitude:number): string {
     let latSide: 'N' | 'S' = 'N';
     let lonSide: 'E' | 'W' = 'E';
 
-    if (data.latitude < 0) {
+    if (latitude < 0) {
         latSide = 'S';
     }
-    if (data.longitude < 0) {
+    if (longitude < 0) {
         lonSide = 'W';
     }
-    return `(${Math.abs(data.latitude)?.toFixed(3) + latSide}, ${Math.abs(data.longitude)?.toFixed(3) + lonSide})`;
+    return `(${Math.abs(latitude)?.toFixed(3) + latSide}, ${Math.abs(longitude)?.toFixed(3) + lonSide})`;
 }
 
 export function weatherToBackground(code: number) {

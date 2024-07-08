@@ -4,8 +4,9 @@
 
 - using map to select shows location name
 - get proper weather icons
-- parity with map select
 - map ignores inputs until left-clicked
+- clicking on multiple elements too fast makes the chart pop-up not load
+- add windrose graph to wind chart pop-up
 
 ## [WIP] - xxxx-xx-xx
 
@@ -14,6 +15,7 @@
 - consistent sizing on table cells
 - make background fixed to avoid white backgrounds on different aspect ratios
 - table resetting everytime the time changes
+- location name breaking location summary
 
 ### Changes
 - change summary to use same layout system as the day selector (no more tables)

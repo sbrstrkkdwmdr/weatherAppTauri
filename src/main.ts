@@ -189,13 +189,13 @@ async function display(data: types.weatherData | string, location: types.geoLoca
             const carouselDiv = document.getElementById('contentCarousel') as HTMLDivElement;;
             const tabDiv = document.getElementById('tabContent') as HTMLDivElement;
 
-            generate.daySummary(data, dayDiv, location, rn, tabDiv);
+            generate.locationSummary(data, dayDiv, location, rn, tabDiv);
             generate.dayCarousel(data, carouselDiv, rn, location, dayDiv, tabDiv);
             generate.tabs(data, tabDiv, rn, dayDiv, location);
             errmsg.innerHTML = '';
             console.log(data);
         } catch (err) {
-            errmsg.innerHTML = `There was an error trying to find weather data at location ${func.formatCoords(location)}`;
+            errmsg.innerHTML = `There was an error trying to find weather data at location ${func.formatCoords(location.latitude, location.longitude)}`;
         }
         vectorSource.clear();
         const point: Feature = new Feature({
@@ -237,8 +237,10 @@ async function display(data: types.weatherData | string, location: types.geoLoca
         mainContent.addEventListener('click', () => {
             if (chartMain.style.transform == "translateY(0px)") {
                 chartMain.style.transform = "translateY(-100vh)";
+                setTimeout(() => {
+                    chartMain.innerHTML = '';
+                }, 500);
             }
         });
     }, 1000);
-
 })();

@@ -7,26 +7,25 @@ import * as func from './func';
 import * as types from './types';
 
 chartjs.Chart.register(...chartjs.registerables);
-let chart: chartjs.Chart;
+let chart_old: chartjs.Chart;
 
-export function daySummary(data: types.weatherData, main: HTMLElement, location: types.geoLocale | types.mapLocation, dataTime: moment.Moment, tabMain: HTMLElement) {
+export function locationSummary(data: types.weatherData, main: HTMLElement, location: types.geoLocale | types.mapLocation, dataTime: moment.Moment, tabMain: HTMLElement) {
     const rn = moment().utcOffset(Math.floor(data.utc_offset_seconds / 60));
     main.innerHTML = '';
-    const today = data.current_weather!;
-    const daily = data.daily!;
-    const hourly = data.hourly!;
-
-    const todayIndex = daily.time.indexOf(rn.format("YYYY-MM-DD")); //day pos
-    let pos = hourly.time.indexOf(rn.format("YYYY-MM-DD[T]HH:00")); //hr pos
 
     //stuff that isnt the table
     const nonTable = document.createElement('div');
 
-    const fullName =
-        (location as types.geoLocale)?.country
-            ?
-            func.genTitleName(location as types.geoLocale)
-            : [location.name, ''];
+    let fullName = [''];
+    try {
+        fullName =
+            (location as types.geoLocale)?.country
+                ?
+                func.genTitleName(location as types.geoLocale)
+                : ['Coordinates: ' + func.formatCoords(location.latitude, location.longitude), ''];
+
+    } catch (err) {
+    }
     const fullTitleDiv = document.createElement('div');
     fullTitleDiv.id = 'contentHeading';
     const placeTitle = document.createElement('h2');
@@ -38,7 +37,7 @@ export function daySummary(data: types.weatherData, main: HTMLElement, location:
     fullTitleDiv.appendChild(subTitle);
 
     const coordParagraph = document.createElement('p');
-    coordParagraph.innerHTML = func.formatCoords(location);
+    coordParagraph.innerHTML = func.formatCoords(location.latitude, location.longitude);
     fullTitleDiv.appendChild(coordParagraph);
 
     nonTable.appendChild(fullTitleDiv);
@@ -75,7 +74,7 @@ export function daySummary(data: types.weatherData, main: HTMLElement, location:
     dayInfo(data, nonTable, dataTime.clone());
 
     dayTitle.addEventListener('click', () => {
-        daySummary(data, main, location, rn, tabMain);
+        locationSummary(data, main, location, rn, tabMain);
         const items = document.getElementsByClassName('dayCarouselItem');
         for (const item of items) {
             if (item.innerHTML.includes(rn.format('YYYY-MM-DD'))) {
@@ -195,9 +194,9 @@ Feels like <span class="spanCur">${temp.app.cur}</span>°C
 Max <span class="spanMax">${temp.max}</span>°C
 Min <span class="spanMin">${temp.min}</span>°C`;
     tempDiv.addEventListener('click', () => {
-        dataChartPopup('line',
-            [{ name: 'Temperature', num: hourly.temperature_2m }],
+        const tempLineGraph = dataChartLine([{ name: 'Temperature', num: hourly.temperature_2m }],
             hourly.time, hourIndex, ['#84ff6b']);
+        dataPopup([tempLineGraph]);
     });
     secondRow.appendChild(tempDiv);
 
@@ -228,13 +227,13 @@ Chance: <span class="spanCur">${rain.chance}%</span></br>`;
     rainDiv.innerHTML = rainTxt;
     rainDiv.appendChild(rainTable);
     rainDiv.addEventListener('click', () => {
-        dataChartPopup('bar', [
+        const rainBarGraph = dataChartBar([
             { name: 'Rain', num: hourly.rain },
             { name: 'Showers', num: hourly.showers },
             { name: 'Snow', num: hourly.snowfall },
         ], hourly.time, hourIndex,
-            ['#69b0f1', '#8269f1', '#c7d8f1', '#84ff6b']
-        );
+            ['#69b0f1', '#8269f1', '#c7d8f1', '#84ff6b']);
+        dataPopup([rainBarGraph]);
     });
     secondRow.appendChild(rainDiv);
 
@@ -247,13 +246,13 @@ Max winds: <span class="spanMax">${wind.max}</span>km/h
 Max gusts: <span class="spanMax">${wind.maxGust}</span>km/h
 `;
     windDiv.addEventListener('click', () => {
-        dataChartPopup('line',
-            [
-                { name: 'Wind speed', num: hourly.windspeed_10m },
-                { name: 'Gust speed', num: hourly.windgusts_10m },
-            ], hourly.time, hourIndex,
-            ['#84ff6b', '#f16969',]
-        );
+        const windLineGraph = dataChartLine([
+            { name: 'Wind speed', num: hourly.windspeed_10m },
+            { name: 'Gust speed', num: hourly.windgusts_10m },
+        ], hourly.time, hourIndex,
+            ['#84ff6b', '#f16969',]);
+        const windroseGraph = 'null';
+        dataPopup([windLineGraph]);
     });
     secondRow.appendChild(windDiv);
 
@@ -268,24 +267,23 @@ Max gusts: <span class="spanMax">${wind.maxGust}</span>km/h
 Index <span class="spanMax">${item.index}</span>${item.units}
 Clear Sky Index <span class="spanMax">${item.clearSky}</span>${item.units}`;
             elem.addEventListener('click', () => {
-                dataChartPopup('line', [
+                const uvLineGraph = dataChartLine([
                     { name: 'UV Index', num: daily.uv_index_max },
                     { name: 'Clear Sky UV Index', num: daily.uv_index_clear_sky_max },
                 ], daily.time, todayIndex,
-                    ['#84ff6b',]
-                );
+                    ['#84ff6b',]);
+                dataPopup([uvLineGraph]);
             });
         } else {
             elem.innerHTML = `<span class="spanTitle">${item.name}</span>
 Max <span class="spanMax">${item.max}</span>${item.units}
 Min <span class="spanMin">${item.min}</span>${item.units}`;
             elem.addEventListener('click', () => {
-                dataChartPopup('bar',
-                    [
-                        { name: item.name, num: item.data },
-                    ], hourly.time, hourIndex,
-                    ['#84ff6b',]
-                );
+                const thirdRowItemBarGraph = dataChartBar([
+                    { name: item.name, num: item.data },
+                ], hourly.time, hourIndex,
+                    ['#84ff6b',]);
+                dataPopup([thirdRowItemBarGraph]);
             });
         }
         thirdRow.appendChild(elem);
@@ -336,7 +334,7 @@ Max <span class="spanMax">${daily.temperature_2m_max[i]}</span>°C`;
         }
 
         item.addEventListener('click', e => {
-            daySummary(data, dayMain, location, time, tabMain);
+            locationSummary(data, dayMain, location, time, tabMain);
             for (const child of carousel.children) {
                 child.classList.remove('dayCarouselSelected');
             }
@@ -647,7 +645,7 @@ export function weekRow(data: types.weatherData, main: HTMLElement, dataTime: mo
         timeRow.cells[pos].id = 'cell' + kyou.format("YYYY-MM-DD[T]HH:00");
 
         timeRow.cells[pos].addEventListener('click', () => {
-            daySummary(data, dayMain, location, kyou, main);
+            locationSummary(data, dayMain, location, kyou, main);
             const items = document.getElementsByClassName('dayCarouselItem');
             for (const item of items) {
                 if (item.innerHTML.includes(kyou.format('YYYY-MM-DD'))) {
@@ -831,8 +829,6 @@ function blendCells(row: HTMLTableRowElement, start?: number, end?: number) {
             cell.style.backgroundColor = '#FFFFFF00';
         }
     }
-    // console.log(grads[0]);
-    // console.log(grads[grads.length - 1]);
     row.style.backgroundImage = `linear-gradient(to right, ${grads.join(', ')})`;
 }
 
@@ -891,9 +887,7 @@ function divTab(select: HTMLElement, remove: HTMLElement[]) {
 
 function tabsScrollTo(elem: HTMLElement) {
     setTimeout(() => {
-
         try {
-            console.log(elem.getElementsByClassName('currentTimeCell'));
             elem.getElementsByClassName('currentTimeCell').item(0).scrollIntoView({ inline: 'start' });
         } catch (err) {
             console.log(err);
@@ -902,7 +896,6 @@ function tabsScrollTo(elem: HTMLElement) {
 }
 
 function tabsUpdateTime(table: HTMLTableElement, dataTime: moment.Moment, hrSeperator: number) {
-    console.log('testing!!');
     for (let i = 0; i < table.rows[1].cells.length; i++) {
         const cell = table.rows[1].cells[i];
         const kyou = moment(cell.id.replace('cell', ''));
@@ -931,19 +924,81 @@ function tabsUpdateTime(table: HTMLTableElement, dataTime: moment.Moment, hrSepe
     }
 }
 
-/**
- * data charts
- */
-function dataChartPopup(type: keyof chartjs.ChartTypeRegistry, data: { name: string, num: number[]; }[], labels: string[], index?: number, colours?: string[],
-    dataSecond?: { name: string, num: number[]; }[]
-) {
-    const chartMain = document.getElementById('chartPopup');
-    const canvas = document.getElementById('chart') as HTMLCanvasElement;
-    canvas.innerHTML = '';
+function dataWindrose(): HTMLCanvasElement {
+    const canvas = document.createElement('canvas');
+    // let i = -1;
+    // const chart = new chartjs.Chart(canvas.getContext('2d'), {
+    //     type: 'polarArea',
+    //     data: {
+    //         labels: [],
+    //         datasets: data.map(x => {
+    //             i++;
+    //             const chartData = {
+    //                 label: x.name,
+    //                 data: x.num,
+    //                 fill: false,
+    //                 borderColor: colours[i] ?? testData.chartColours[i],
+    //                 color: 'rgb(100,100,100,0.5)',
+    //             };
+    //             return chartData;
+    //         })
+    //     },
+    //     options: {
+    //         responsive: true,
+    //         scales: {
+    //             x: {
+    //                 grid: {
+    //                     display: true,
+    //                     drawOnChartArea: true,
+    //                     drawTicks: true,
+    //                     color: 'rgb(64, 64, 64)'
+    //                 },
+    //                 ticks: {
+    //                     color: 'rgb(128, 128, 128)'
+    //                 },
+    //             },
+    //             y: {
+    //                 grid: {
+    //                     display: true,
+    //                     drawOnChartArea: true,
+    //                     drawTicks: true,
+    //                     color: 'rgb(64, 64, 64)'
+    //                 },
+    //                 ticks: {
+    //                     color: 'rgb(128, 128, 128)'
+    //                 },
+    //                 beginAtZero: false,
+    //             },
+
+
+    //         },
+    //         elements: {
+    //             point: {
+    //                 radius: customRadius,
+    //             }
+    //         },
+    //         plugins: {
+    //             legend: {
+    //                 labels: {
+    //                     color: "rgb(225,225,225)",
+    //                 }
+    //             }
+    //         }
+    //     }
+    // });
+    // chart.canvas.style.height = '75vh';
+    // chart.canvas.style.width = '75vw';
+    // function customRadius(ctx: any) {
+    //     return ctx.dataIndex === index ? 10 : 2;
+    // }
+    return canvas;
+}
+
+function dataChartLine(data: { name: string, num: number[]; }[], labels: string[], index?: number, colours?: string[]): HTMLCanvasElement {
+    const canvas = document.createElement('canvas');
     let i = -1;
-    chart?.destroy();
-    chart = new chartjs.Chart(canvas.getContext('2d'), {
-        type,
+    const chart = new chartjs.Chart(canvas.getContext('2d'), {
+        type: 'line',
         data: {
             labels: labels,
             datasets: data.map(x => {
@@ -952,23 +1007,14 @@ function dataChartPopup(type: keyof chartjs.ChartTypeRegistry, data: { name: str
                     label: x.name,
                     data: x.num,
                     fill: false,
-                    borderColor: 'rgb(100,100,100,0.5)',
-                    backgroundColor: 'rgb(100,100,100,0.5)',
+                    borderColor: colours[i] ?? testData.chartColours[i],
                     color: 'rgb(100,100,100,0.5)',
                 };
-                switch (type) {
-                    case 'line': default:
-                        chartData['borderColor'] = colours[i] ?? testData.chartColours[i];
-                        break;
-                    case 'bar':
-                        chartData['backgroundColor'] = colours[i] ?? testData.chartColours[i];
-                        break;
-                }
                 return chartData;
             })
         },
         options: {
-            responsive: false,
+            responsive: true,
             scales: {
                 x: {
                     grid: {
@@ -976,7 +1022,7 @@ function dataChartPopup(type: keyof chartjs.ChartTypeRegistry, data: { name: str
                         drawOnChartArea: true,
                         drawTicks: true,
                         color: 'rgb(64, 64, 64)'
-                    }, 
+                    },
                     ticks: {
                         color: 'rgb(128, 128, 128)'
                     },
@@ -993,12 +1039,19 @@ function dataChartPopup(type: keyof chartjs.ChartTypeRegistry, data: { name: str
                     },
                     beginAtZero: false,
                 },
-                
-                
+
+
             },
             elements: {
                 point: {
                     radius: customRadius,
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: "rgb(225,225,225)",
+                    }
                 }
             }
         }
@@ -1008,9 +1061,81 @@ function dataChartPopup(type: keyof chartjs.ChartTypeRegistry, data: { name: str
     function customRadius(ctx: any) {
         return ctx.dataIndex === index ? 10 : 2;
     }
+    return canvas;
+}
 
-    // chartMain.style.display = '';
-    // chartContainer.style.transform = "translateY(0)";
+function dataChartBar(data: { name: string, num: number[]; }[], labels: string[], index?: number, colours?: string[]): HTMLCanvasElement {
+    const canvas = document.createElement('canvas');
+    let i = -1;
+    const chart = new chartjs.Chart(canvas.getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: data.map(x => {
+                i++;
+                const chartData = {
+                    label: x.name,
+                    data: x.num,
+                    fill: false,
+                    backgroundColor: colours[i] ?? testData.chartColours[i],
+                    color: 'rgb(100,100,100,0.5)',
+                };
+                return chartData;
+            })
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    grid: {
+                        display: true,
+                        drawOnChartArea: true,
+                        drawTicks: true,
+                        color: 'rgb(64, 64, 64)'
+                    },
+                    ticks: {
+                        color: 'rgb(128, 128, 128)'
+                    },
+                },
+                y: {
+                    grid: {
+                        display: true,
+                        drawOnChartArea: true,
+                        drawTicks: true,
+                        color: 'rgb(64, 64, 64)'
+                    },
+                    ticks: {
+                        color: 'rgb(128, 128, 128)'
+                    },
+                    beginAtZero: false,
+                },
+
+
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: "rgb(225,225,225)",
+                    }
+                }
+            }
+        }
+    });
+    chart.canvas.style.height = '75vh';
+    chart.canvas.style.width = '75vw';
+    return canvas;
+}
+
+function dataPopup(charts: HTMLCanvasElement[]) {
+    const chartMain = document.getElementById('chartPopup');
+    for (const chart of charts) {
+        chart.width = 1400 / charts.length;
+        chart.height = 700 / charts.length;
+        chart.className = 'chart';
+        chart.style.height = (75 / charts.length) + 'vh';
+        chart.style.width = (75 / charts.length) + 'vw';
+        chartMain.appendChild(chart);
+    }
     setTimeout(() => {
         chartMain.style.transform = "translateY(0px)";
     }, 500);
