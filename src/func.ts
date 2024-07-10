@@ -1,12 +1,13 @@
-import { fs } from '@tauri-apps/api';
+import { fs, path } from '@tauri-apps/api';
 import axios from 'axios';
 import * as chartjs from 'chart.js';
 import * as testData from './data';
 import * as types from './types';
 
 export async function getLocation(name: string) {
-    if (testData.test) {
-        return testData.location;
+    const filePath = await path.appDataDir();
+    if (testData.test && await fs.exists(filePath + 'locationData.json')) {
+        return JSON.parse(await fs.readTextFile(filePath + 'locationData.json')) as types.geoResults;
     }
     const url = `https://geocoding-api.open-meteo.com/v1/search?name=${name.replaceAll(' ', '+')}&count=10&language=en&format=json`;
     const data = await axios.get(url)
@@ -17,7 +18,9 @@ export async function getLocation(name: string) {
         }
         );
     console.log(data);
-    return data as { results: types.geoLocale[]; };
+    console.log('Writing to file: ' + filePath + 'locationData.json');
+    await fs.writeTextFile(filePath + 'locationData.json', JSON.stringify(data, null, 2));
+    return data as types.geoResults;
 }
 
 export async function getWeather(
@@ -25,8 +28,9 @@ export async function getWeather(
     longitude: number,
     location: types.geoLocale | types.mapLocation,
 ) {
-    if (testData.test) {
-        return testData.weather;
+    const filePath = await path.appDataDir();
+    if (testData.test && await fs.exists(filePath + 'weatherData.json')) {
+        return JSON.parse(await fs.readTextFile(filePath + 'weatherData.json')) as types.weatherData;
     } else {
         if (isNaN(latitude) || isNaN(longitude)) {
             return 'NaN coordinates';
@@ -44,6 +48,8 @@ export async function getWeather(
                 return { error: true, reason: "timeout" };
             });
         console.log(data);
+        console.log('Writing to file: ' + filePath + 'weatherData.json');
+        await fs.writeTextFile(filePath + 'weatherData.json', JSON.stringify(data, null, 2));
         return data as types.weatherData;
     }
 }
@@ -258,7 +264,7 @@ export function genTitleName(data: types.geoLocale): string[] {
     return base;
 }
 
-export function formatCoords(latitude:number,longitude:number): string {
+export function formatCoords(latitude: number, longitude: number): string {
     let latSide: 'N' | 'S' = 'N';
     let lonSide: 'E' | 'W' = 'E';
 

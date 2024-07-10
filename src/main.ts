@@ -1,3 +1,4 @@
+import { fs, path } from "@tauri-apps/api";
 import * as window from "@tauri-apps/api/window";
 import moment from 'moment';
 import Feature from 'ol/Feature';
@@ -49,6 +50,15 @@ try {
     window.getCurrent().onResized(() => {
         setMaximiseButtonImg();
     });
+    (async () => {
+        const appDataPath = await path.appDataDir();
+        console.log('appdata exists: ' + await fs.exists(appDataPath));
+        console.log(appDataPath);
+        if (!(await fs.exists(appDataPath))) {
+            console.log('Creating dir: ' + appDataPath);
+            fs.createDir(appDataPath, { recursive: true });
+        }
+    })();
 } catch (err) { }
 
 
