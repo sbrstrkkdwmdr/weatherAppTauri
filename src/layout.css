@@ -98,7 +98,7 @@ input
 
 #saveLocation {
     margin: auto;
-    margin-top: 25px;
+    margin-top: 50px;
     max-width: max-content;
 }
 
@@ -493,11 +493,5 @@ table {
 @media (max-width: 1600px) {
     #saveLocation {
         margin-top: 100px;
-    }
-}
-
-@media (max-width: 1100px) {
-    #mapContainer {
-        top: 135px;
     }
 }

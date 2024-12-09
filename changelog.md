@@ -29,8 +29,8 @@
 - option to select hour of the day (shows "selected time")
 - pressing the local time/selected time header resets selected time
 - pressing on weather events displays a graph (click outside the graph to close it)
-- added user settings
-- added default location
+- added user settings (saved to %appdata%/roaming)
+- added default location setting
 
 ### Removals
 - removed "Today" table
