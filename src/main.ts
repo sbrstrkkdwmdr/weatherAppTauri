@@ -1,4 +1,5 @@
 import { fs, path } from "@tauri-apps/api";
+import { BaseDirectory, exists, readTextFile, writeTextFile } from '@tauri-apps/api/fs';
 import * as window from "@tauri-apps/api/window";
 import moment from 'moment';
 import Feature from 'ol/Feature';
@@ -15,6 +16,8 @@ import * as testData from './data';
 import * as func from './func';
 import * as generate from './generator';
 import * as types from './types';
+
+
 // enforce minimum aspect ratio
 // try catch block to let vite work as intended
 try {
@@ -61,7 +64,7 @@ try {
     })();
 } catch (err) { }
 
-
+let settings: types.settings;
 
 //search bar results handler
 document.getElementById('searchButton')!
@@ -232,6 +235,13 @@ async function display(data: types.weatherData | string, location: types.geoLoca
                 zoom: 7
             });
         }, 2500);
+
+        const saveLocationButton = document.getElementById('settingsSaveLocation');
+        saveLocationButton.addEventListener('click', async () => {
+            console.log('saving location');
+            settings.defaultLocation = location;
+            await storeSettings(settings);
+        });
     }
 }
 
@@ -243,7 +253,7 @@ async function display(data: types.weatherData | string, location: types.geoLoca
     // chartContainer.style.transform = "translateY(-3000px)";
     chartMain.style.transform = "translateY(-100vh)";
     // chartMain.style.display = 'none';
-    setTimeout(() => {
+    setTimeout(async () => {
         mainContent.addEventListener('click', () => {
             if (chartMain.style.transform == "translateY(0px)") {
                 chartMain.style.transform = "translateY(-100vh)";
@@ -252,5 +262,51 @@ async function display(data: types.weatherData | string, location: types.geoLoca
                 }, 500);
             }
         });
+        settings = await fetchSettings();
+        console.log('checking if default location');
+        if (settings.defaultLocation) {
+            const location = settings.defaultLocation;
+            console.log('Getting weather for: ' + location.name);
+            errmsg.innerHTML = 'Loading data...';
+            let data = await func.getWeather(location.latitude, location.longitude, location);
+            if (typeof data == 'string') {
+                errmsg.innerHTML = 'Failed to load weather data for ' + location.name + ' (' + data + ')';
+            } else {
+                display(data, location);
+                errmsg.innerHTML = '';
+            }
+        } else {
+            console.log('no default location found');
+        }
+        const clearLocationButton = document.getElementById('settingsClearLocation');
+        clearLocationButton.addEventListener('click', e => {
+            settings.defaultLocation = null;
+            storeSettings(settings);
+        });
     }, 1000);
 })();
+
+async function fetchSettings() {
+    let data: types.settings;
+    const filePath = await path.appDataDir();
+    if (await exists(filePath + 'appSettings.json')) {
+        const ctn = await readTextFile(filePath + 'appSettings.json');
+        console.log("found settings");
+        console.log(ctn);
+        data = JSON.parse(ctn);
+    } else {
+        console.log('settings do not exist - generating default');
+        data = {
+            defaultLocation: null
+        };
+        await storeSettings(data);
+    }
+    return data;
+}
+
+async function storeSettings(data: types.settings) {
+    const filePath = await path.appDataDir();
+    console.log('saving data...');
+    console.log(filePath + 'appSettings.json');
+    await writeTextFile(filePath + 'appSettings.json', JSON.stringify(data, null, 2));
+}

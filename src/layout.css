@@ -96,6 +96,28 @@ input
     height: 25px;
 }
 
+#saveLocation {
+    margin: auto;
+    margin-top: 25px;
+    max-width: max-content;
+}
+
+.settingLocationButton {
+    display: inline-block;
+    margin: auto;
+    padding: 10px;
+    background-color: #00000088;
+    border-radius: 15px;
+}
+
+.settingLocationButton:hover {
+    color: #b0ff56e7;
+}
+
+#settingsClearLocation:hover {
+    color: #ff5656e7;
+}
+
 /* search bar results */
 
 #searchSuggest {
@@ -468,3 +490,14 @@ table {
     color: white;
 }
 
+@media (max-width: 1600px) {
+    #saveLocation {
+        margin-top: 100px;
+    }
+}
+
+@media (max-width: 1100px) {
+    #mapContainer {
+        top: 135px;
+    }
+}

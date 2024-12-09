@@ -1,3 +1,7 @@
+export type settings = {
+    defaultLocation: geoLocale | mapLocation
+};
+
 export type geoLocale = {
     id: number,
     name: string,
