@@ -7,6 +7,9 @@
 - map ignores inputs until left-clicked
 - clicking on multiple elements too fast makes the chart pop-up not load
 - add windrose graph to wind chart pop-up
+- accessibility
+- appdata button
+- performance mode (disable animations, transparency, background filter sfx)
 
 ## [WIP] - xxxx-xx-xx
 
