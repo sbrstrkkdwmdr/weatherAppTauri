@@ -11,7 +11,7 @@
 - appdata button
 - performance mode (disable animations, transparency, background filter sfx)
 
-## [WIP] - xxxx-xx-xx
+## [0.3.0] - 2024-12-09
 
 ### Fixes
 - table backgrounds being mis-aligned
@@ -29,6 +29,8 @@
 - option to select hour of the day (shows "selected time")
 - pressing the local time/selected time header resets selected time
 - pressing on weather events displays a graph (click outside the graph to close it)
+- added user settings
+- added default location
 
 ### Removals
 - removed "Today" table
